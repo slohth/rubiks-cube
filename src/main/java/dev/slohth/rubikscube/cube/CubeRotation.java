@@ -2,6 +2,8 @@ package dev.slohth.rubikscube.cube;
 
 import dev.slohth.rubikscube.cubit.CubitRotation;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public enum CubeRotation {
 
     UP(CubeFace.UP, new CubitRotation[] { CubitRotation.LEFT }, false),
@@ -37,4 +39,8 @@ public enum CubeRotation {
     public boolean isPrime() { return this.prime; }
 
     public CubeFace getFace() { return this.face; }
+
+    public static CubeRotation random() {
+        return CubeRotation.values()[ThreadLocalRandom.current().nextInt(CubeRotation.values().length)];
+    }
 }

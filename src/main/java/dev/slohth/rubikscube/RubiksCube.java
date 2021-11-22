@@ -10,8 +10,27 @@ public final class RubiksCube {
     public void run() {
 
         Cube cube = new Cube();
-        cube.rotate(CubeRotation.RIGHT);
-        cube.display();
+
+        System.out.println(cube.isSolved());
+
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.UP_PRIME);
+        System.out.println(cube.isSolved());
+
+//        // Random scramble
+//        for (int i = 0; i < 50; i++) {
+//            cube.rotate(CubeRotation.random());
+//        }
+//
+//        int moves = 0;
+//        Benchmark benchmark = new Benchmark();
+//        benchmark.start();
+//        while (!cube.isSolved()) {
+//            cube.rotate(CubeRotation.random());
+//            moves++;
+//            System.out.println("Rotated! " + moves);
+//        }
+//        System.out.println(moves + " moves in " + benchmark.stop() + "ms");
 
     }
 }
