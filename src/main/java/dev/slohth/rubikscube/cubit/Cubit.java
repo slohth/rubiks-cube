@@ -1,10 +1,15 @@
 package dev.slohth.rubikscube.cubit;
 
+import dev.slohth.rubikscube.cube.Cube;
+
 public class Cubit {
 
+    private final int id;
     private final byte[] c;
+    private final Cube cube;
 
-    public Cubit() {
+    public Cubit(Cube cube, int id) {
+        this.cube = cube; this.id = id;
         this.c = new byte[] { 0, 1, 2, 3, 4, 5 };
     }
 
@@ -52,6 +57,13 @@ public class Cubit {
         return b;
     }
 
-    public byte[] getCube() { return this.c; }
+    public int getIndexInCube() {
+        for (int i = 0; i < cube.getCubits().length; i++) if (this.id == cube.getCubits()[i].getId()) return i;
+        return -1;
+    }
+
+    public byte[] getOrientation() { return this.c; }
+
+    public int getId() { return this.id; }
 
 }

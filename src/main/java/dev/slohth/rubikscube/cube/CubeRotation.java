@@ -19,9 +19,9 @@ public enum CubeRotation {
     RIGHT_PRIME(CubeFace.RIGHT, new CubitRotation[] { CubitRotation.DOWN }, true),
 
     FRONT(CubeFace.FRONT, new CubitRotation[] { CubitRotation.DOWN, CubitRotation.RIGHT, CubitRotation.UP }, false),
-    FRONT_PRIME(CubeFace.FRONT, new CubitRotation[] { CubitRotation.DOWN, CubitRotation.UP, CubitRotation.UP }, true),
+    FRONT_PRIME(CubeFace.FRONT, new CubitRotation[] { CubitRotation.DOWN, CubitRotation.LEFT, CubitRotation.UP }, true),
 
-    BACK(CubeFace.BACK, new CubitRotation[] { CubitRotation.DOWN, CubitRotation.UP, CubitRotation.UP }, false),
+    BACK(CubeFace.BACK, new CubitRotation[] { CubitRotation.DOWN, CubitRotation.LEFT, CubitRotation.UP }, false),
     BACK_PRIME(CubeFace.BACK, new CubitRotation[] { CubitRotation.DOWN, CubitRotation.RIGHT, CubitRotation.UP }, true);
 
     private final CubeFace face;

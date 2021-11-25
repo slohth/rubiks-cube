@@ -9,7 +9,7 @@ public class Cube {
 
     public Cube() {
         this.cubits = new Cubit[27];
-        for (int i = 0; i < this.cubits.length; i++) this.cubits[i] = new Cubit();
+        for (int i = 0; i < this.cubits.length; i++) this.cubits[i] = new Cubit(this, i);
     }
 
     public boolean isSolved() {
@@ -36,20 +36,15 @@ public class Cube {
         return new byte[] { arr[6], arr[3], arr[0], arr[7], arr[4], arr[1], arr[8], arr[5], arr[2] };
     }
 
-    public byte[] getDisplayArray() {
+    public void display() {
         int count = 0;
         byte[] d = new byte[54];
         for (CubeFace face : CubeFace.values()) {
             for (byte index : face.getCubits()) {
-                d[count] = this.cubits[index].getCube()[face.getId()];
+                d[count] = this.cubits[index].getOrientation()[face.getId()];
                 count++;
             }
         }
-        return d;
-    }
-
-    public void display() {
-        byte[] d = this.getDisplayArray();
 
         System.out.println("      " + d[0] + " " + d[1] + " " + d[2]);
         System.out.println("      " + d[3] + " " + d[4] + " " + d[5]);
@@ -61,8 +56,7 @@ public class Cube {
         System.out.println("      " + d[48] + " " + d[49] + " " + d[50]);
         System.out.println("      " + d[51] + " " + d[52] + " " + d[53]);
 
-
-
     }
 
+    public Cubit[] getCubits() { return this.cubits; }
 }

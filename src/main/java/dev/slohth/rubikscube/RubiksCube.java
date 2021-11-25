@@ -2,6 +2,7 @@ package dev.slohth.rubikscube;
 
 import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
+import dev.slohth.rubikscube.solver.CubeSolver;
 
 public final class RubiksCube {
 
@@ -10,23 +11,17 @@ public final class RubiksCube {
     public void run() {
 
         Cube cube = new Cube();
-        cube.rotate(CubeRotation.RIGHT);
-        cube.display();
 
-//        // Random scramble
-//        for (int i = 0; i < 50; i++) {
-//            cube.rotate(CubeRotation.random());
-//        }
-//
-//        int moves = 0;
-//        Benchmark benchmark = new Benchmark();
-//        benchmark.start();
-//        while (!cube.isSolved()) {
-//            cube.rotate(CubeRotation.random());
-//            moves++;
-//            System.out.println("Rotated! " + moves);
-//        }
-//        System.out.println(moves + " moves in " + benchmark.stop() + "ms");
+        for (int i = 0; i < 20; i++) {
+            cube.rotate(CubeRotation.random());
+        }
+        cube.display();
+        System.out.println(" ");
+
+        CubeSolver solver = new CubeSolver(cube);
+        solver.solveRedCross();
+
+        cube.display();
 
     }
 }
