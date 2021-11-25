@@ -36,17 +36,20 @@ public class Cube {
         return new byte[] { arr[6], arr[3], arr[0], arr[7], arr[4], arr[1], arr[8], arr[5], arr[2] };
     }
 
-    public void display() {
+    public byte[] getDisplayArray() {
         int count = 0;
-
         byte[] d = new byte[54];
-
         for (CubeFace face : CubeFace.values()) {
             for (byte index : face.getCubits()) {
                 d[count] = this.cubits[index].getCube()[face.getId()];
                 count++;
             }
         }
+        return d;
+    }
+
+    public void display() {
+        byte[] d = this.getDisplayArray();
 
         System.out.println("      " + d[0] + " " + d[1] + " " + d[2]);
         System.out.println("      " + d[3] + " " + d[4] + " " + d[5]);

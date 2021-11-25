@@ -10,12 +10,8 @@ public final class RubiksCube {
     public void run() {
 
         Cube cube = new Cube();
-
-        System.out.println(cube.isSolved());
-
-        cube.rotate(CubeRotation.UP);
-        cube.rotate(CubeRotation.UP_PRIME);
-        System.out.println(cube.isSolved());
+        cube.rotate(CubeRotation.RIGHT);
+        cube.display();
 
 //        // Random scramble
 //        for (int i = 0; i < 50; i++) {

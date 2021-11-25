@@ -8,6 +8,8 @@ public class CubeSolver {
 
     public CubeSolver(Cube cube) { this.cube = cube; }
 
+    public void cross() {
 
+    }
 
 }
