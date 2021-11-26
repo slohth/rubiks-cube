@@ -12,16 +12,16 @@ public final class RubiksCube {
 
         Cube cube = new Cube();
 
-        for (int i = 0; i < 20; i++) {
-            cube.rotate(CubeRotation.random());
-        }
-        cube.display();
-        System.out.println(" ");
-
         CubeSolver solver = new CubeSolver(cube);
-        solver.solveRedCross();
 
-        cube.display();
+
+        for (int n = 0; n < 10; n++) {
+            for (int i = 0; i < 50; i++) {
+                cube.rotate(CubeRotation.random());
+            }
+            solver.solveRedCross();
+        }
+
 
     }
 }

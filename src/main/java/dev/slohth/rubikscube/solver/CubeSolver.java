@@ -16,10 +16,15 @@ public class CubeSolver {
 
     public void solveRedCross() {
 
-        this.moveDownEdgesToTop();
+        do {
+            this.moveDownEdgesToTop();
+            this.moveFaceEdgesToTop();
+        } while (this.getRedEdgesOnFace(CubeFace.UP).size() < 4);
 
-        while (!this.crossIsOnTop()) this.moveFaceEdgesToTop();
+        this.allignTopCrossToBottom();
+        cube.display();
 
+        //this.allignTopCrossToBottom();
     }
 
     private void moveDownEdgesToTop() {
@@ -42,97 +47,185 @@ public class CubeSolver {
 
     private void moveFaceEdgesToTop() {
 
-        int[] data = new int[] {}; int[] top = new int[] {}; CubeRotation[] rots = new CubeRotation[] {}; int topEdge = 0;
-        for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK, CubeFace.LEFT }) {
+        for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK, CubeFace.LEFT}) {
             switch (face) {
                 case FRONT -> {
-                    data = new int[] { 15, 17 }; top = new int[] { 3, 5 }; topEdge = 7;
-                    rots = new CubeRotation[] { CubeRotation.LEFT_PRIME, CubeRotation.RIGHT };
-                } case RIGHT -> {
-                    data = new int[] { 17, 11 }; top = new int[] { 7, 1 }; topEdge = 5;
-                    rots = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.BACK };
-                } case BACK -> {
-                    data = new int[] { 11, 9 }; top = new int[] { 5, 3 }; topEdge = 1;
-                    rots = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.LEFT };
-                } case LEFT -> {
-                    data = new int[] { 9, 15 }; top = new int[] { 1, 7 }; topEdge = 3;
-                    rots = new CubeRotation[] { CubeRotation.BACK_PRIME, CubeRotation.FRONT };
-                }
-            }
 
-            while (!getRedEdgesOnFace(face).isEmpty()) {
-                System.out.println("Edge set");
-                for (Cubit edge : getRedEdgesOnFace(face)) {
-                    System.out.println(1);
-                    int pos = edge.getIndexInCube();
-                    for (int i = 0; i < data.length; i++) {
-                        System.out.println(2);
-                        if (face.getCubits()[new int[] { 3, 5 }[i]] == pos) {
-                            if (crossIsOnTop()) return;
-                            while (cube.getCubits()[data[i]].getOrientation()[0] == 5) {
-                                System.out.println(3);
+                    while (!this.getRedEdgesOnFace(face).isEmpty()) {
+                        Cubit leftCheck = cube.getCubits()[face.getCubits()[3]];
+                        if (leftCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[3].getOrientation()[0] == 5) {
                                 cube.rotate(CubeRotation.UP);
                             }
-                            cube.rotate(rots[i]);
+                            cube.rotate(CubeRotation.LEFT_PRIME);
+                        }
+
+                        Cubit rightCheck = cube.getCubits()[face.getCubits()[5]];
+                        if (rightCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[5].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.RIGHT);
+                        }
+
+                        Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
+                        Cubit bottomCheck = cube.getCubits()[face.getCubits()[7]];
+                        if (topCheck.getOrientation()[face.getId()] == 5) {
+                            cube.rotate(CubeRotation.FRONT);
+                        } else if (bottomCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[7].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.FRONT);
                         }
                     }
+
                 }
-                System.out.println(4);
-                while (cube.getCubits()[topEdge].getOrientation()[0] == 5) {
-                    System.out.println(5);
-                    System.out.println("Orientation condition");
-                    cube.rotate(CubeRotation.UP);
+                case RIGHT -> {
+
+                    while (!this.getRedEdgesOnFace(face).isEmpty()) {
+                        Cubit leftCheck = cube.getCubits()[face.getCubits()[3]];
+                        if (leftCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[7].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.FRONT_PRIME);
+                        }
+
+                        Cubit rightCheck = cube.getCubits()[face.getCubits()[5]];
+                        if (rightCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[1].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.BACK);
+                        }
+
+                        Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
+                        Cubit bottomCheck = cube.getCubits()[face.getCubits()[7]];
+                        if (topCheck.getOrientation()[face.getId()] == 5) {
+                            cube.rotate(CubeRotation.RIGHT);
+                        } else if (bottomCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[5].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.RIGHT);
+                        }
+                    }
+
                 }
-                System.out.println(6);
-                cube.rotate(CubeRotation.valueOf(face.toString()));
+                case BACK -> {
+
+                    while (!this.getRedEdgesOnFace(face).isEmpty()) {
+                        Cubit leftCheck = cube.getCubits()[face.getCubits()[3]];
+                        if (leftCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[5].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.RIGHT_PRIME);
+                        }
+
+                        Cubit rightCheck = cube.getCubits()[face.getCubits()[5]];
+                        if (rightCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[3].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.LEFT);
+                        }
+
+                        Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
+                        Cubit bottomCheck = cube.getCubits()[face.getCubits()[7]];
+                        if (topCheck.getOrientation()[face.getId()] == 5) {
+                            cube.rotate(CubeRotation.BACK);
+                        } else if (bottomCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[1].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.BACK);
+                        }
+                    }
+
+                }
+                case LEFT -> {
+
+                    while (!this.getRedEdgesOnFace(face).isEmpty()) {
+                        Cubit leftCheck = cube.getCubits()[face.getCubits()[3]];
+                        if (leftCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[1].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.BACK_PRIME);
+                        }
+
+                        Cubit rightCheck = cube.getCubits()[face.getCubits()[5]];
+                        if (rightCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[7].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.FRONT);
+                        }
+
+                        Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
+                        Cubit bottomCheck = cube.getCubits()[face.getCubits()[7]];
+                        if (topCheck.getOrientation()[face.getId()] == 5) {
+                            cube.rotate(CubeRotation.LEFT);
+                        } else if (bottomCheck.getOrientation()[face.getId()] == 5) {
+                            while (cube.getCubits()[3].getOrientation()[0] == 5) {
+                                cube.rotate(CubeRotation.UP);
+                            }
+                            cube.rotate(CubeRotation.LEFT);
+                        }
+                    }
+
+                }
             }
         }
 
-
-//        CubeFace face = CubeFace.RIGHT;
-//
-//        data = new int[]{17, 11};
-//        top = new int[]{7, 1};
-//        topEdge = 5;
-//        rots = new CubeRotation[]{CubeRotation.FRONT_PRIME, CubeRotation.BACK};
-//
-//        while (!getRedEdgesOnFace(face).isEmpty()) {
-//            System.out.println("Edge set");
-//            for (Cubit edge : getRedEdgesOnFace(face)) {
-//                System.out.println(1);
-//                int pos = edge.getIndexInCube();
-//                for (int i = 0; i < data.length; i++) {
-//                    System.out.println(2);
-//                    if (face.getCubits()[top[i]] == pos) {
-//                        while (cube.getCubits()[top[i]].getOrientation()[0] == 5) {
-//                            System.out.println(3);
-//                            cube.rotate(CubeRotation.UP);
-//                        }
-//                        cube.rotate(rots[i]);
-//                    }
-//                }
-//            }
-//            System.out.println(4);
-//            while (cube.getCubits()[topEdge].getOrientation()[0] == 5) {
-//                System.out.println(5);
-//                System.out.println("Orientation condition");
-//                cube.rotate(CubeRotation.UP);
-//            }
-//            System.out.println(6);
-//            cube.rotate(CubeRotation.valueOf(face.toString()));
-//        }
-
     }
 
-    private boolean crossIsOnTop() {
-        return getRedEdgesOnFace(CubeFace.UP).size() == 4;
+    private void allignTopCrossToBottom() {
+
+        CubeFace[] faces = new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK };
+        int[] edges = new int[] { 3, 7, 5, 1 };
+
+        while (!this.getRedEdgesOnFace(CubeFace.UP).isEmpty()) { // while there are red edges on the top
+
+            System.out.println(1);
+
+            for (int i = 0; i < faces.length; i++) { // for every face
+
+                System.out.println(2);
+
+                Cubit c = cube.getCubits()[CubeFace.UP.getCubits()[edges[i]]];
+                if (c.getOrientation()[0] == 5) { // if the face edge is still red
+
+                    System.out.println(3);
+
+                    while (c.getOrientation()[faces[i].getId()] != faces[i].getId()) { // while the adjacent color is not the centre color
+                        cube.rotate(CubeRotation.UP);
+                    }
+
+                    System.out.println(4);
+
+                    CubeRotation rot = CubeRotation.valueOf(faces[i].toString()); // rotate the side twice
+                    cube.rotate(rot); cube.rotate(rot);
+                }
+
+                System.out.println(6);
+            }
+
+            System.out.println(7);
+
+        }
+
+        System.out.println(8);
     }
 
     private Set<Cubit> getRedEdgesOnFace(CubeFace face) {
         Set<Cubit> edges = new HashSet<>();
         byte[] cubits = face.getCubits();
         for (int index : new int[] { 1, 3, 5, 7 }) {
-            if (cube.getCubits()[cubits[index]].getOrientation()[face.getId()] == 5) edges.add(cube.getCubits()[cubits[index]]);
+            Cubit c = cube.getCubits()[cubits[index]];
+            if (c.getOrientation()[face.getId()] == 5) edges.add(c);
         }
         return edges;
     }
