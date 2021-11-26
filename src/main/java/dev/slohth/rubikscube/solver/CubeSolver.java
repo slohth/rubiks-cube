@@ -22,9 +22,8 @@ public class CubeSolver {
         } while (this.getRedEdgesOnFace(CubeFace.UP).size() < 4);
 
         this.allignTopCrossToBottom();
-        cube.display();
+        System.out.println(this.getRedEdgesOnFace(CubeFace.DOWN).size() == 4);
 
-        //this.allignTopCrossToBottom();
     }
 
     private void moveDownEdgesToTop() {
@@ -184,40 +183,25 @@ public class CubeSolver {
 
     private void allignTopCrossToBottom() {
 
-        CubeFace[] faces = new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK };
         int[] edges = new int[] { 3, 7, 5, 1 };
+        for (int i = 0; i < edges.length; i++) {
 
-        while (!this.getRedEdgesOnFace(CubeFace.UP).isEmpty()) { // while there are red edges on the top
-
-            System.out.println(1);
-
-            for (int i = 0; i < faces.length; i++) { // for every face
-
-                System.out.println(2);
-
-                Cubit c = cube.getCubits()[CubeFace.UP.getCubits()[edges[i]]];
-                if (c.getOrientation()[0] == 5) { // if the face edge is still red
-
-                    System.out.println(3);
-
-                    while (c.getOrientation()[faces[i].getId()] != faces[i].getId()) { // while the adjacent color is not the centre color
+            for (int check = 0; check < 4; check++) {
+                if (cube.getCubits()[CubeFace.UP.getCubits()[edges[i]]].getOrientation()[0] != 5) {
+                    cube.rotate(CubeRotation.UP);
+                } else {
+                    Cubit c = cube.getCubits()[CubeFace.UP.getCubits()[edges[i]]];
+                    if (c.getOrientation()[i + 1] == (i + 1)) {
+                        CubeRotation rot = CubeRotation.valueOf(CubeFace.getById(i + 1).toString());
+                        cube.rotate(rot); cube.rotate(rot);
+                    } else {
                         cube.rotate(CubeRotation.UP);
                     }
-
-                    System.out.println(4);
-
-                    CubeRotation rot = CubeRotation.valueOf(faces[i].toString()); // rotate the side twice
-                    cube.rotate(rot); cube.rotate(rot);
                 }
-
-                System.out.println(6);
             }
-
-            System.out.println(7);
 
         }
 
-        System.out.println(8);
     }
 
     private Set<Cubit> getRedEdgesOnFace(CubeFace face) {

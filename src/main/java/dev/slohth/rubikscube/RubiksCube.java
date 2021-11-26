@@ -8,20 +8,28 @@ public final class RubiksCube {
 
     public static void main(String[] args) { new RubiksCube().run(); }
 
+    private Cube cube;
+    private CubeSolver solver;
+
     public void run() {
 
-        Cube cube = new Cube();
+        this.cube = new Cube();
 
-        CubeSolver solver = new CubeSolver(cube);
+        this.solver = new CubeSolver(cube);
 
-
-        for (int n = 0; n < 10; n++) {
-            for (int i = 0; i < 50; i++) {
-                cube.rotate(CubeRotation.random());
-            }
-            solver.solveRedCross();
+        for (int i = 0; i < 25; i++) {
+            test();
         }
 
+        cube.display();
 
     }
+
+    private void test() {
+        for (int i = 0; i < 50; i++) {
+            this.cube.rotate(CubeRotation.random());
+        }
+        this.solver.solveRedCross();
+    }
+
 }

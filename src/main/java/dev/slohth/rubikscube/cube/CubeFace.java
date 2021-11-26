@@ -17,4 +17,9 @@ public enum CubeFace {
     public byte[] getCubits() { return this.cubits; }
 
     public byte getId() { return this.id; }
+
+    public static CubeFace getById(int id) {
+        for (CubeFace face : CubeFace.values()) if (face.getId() == id) return face;
+        return null;
+    }
 }
