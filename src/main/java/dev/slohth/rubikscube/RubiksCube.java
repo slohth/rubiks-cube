@@ -4,6 +4,8 @@ import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
 import dev.slohth.rubikscube.solver.CubeSolver;
 
+import java.util.concurrent.TimeUnit;
+
 public final class RubiksCube {
 
     public static void main(String[] args) { new RubiksCube().run(); }
@@ -17,11 +19,20 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
+        int moves = 0;
+        Benchmark b = new Benchmark(TimeUnit.MICROSECONDS);
+        b.start();
         for (int i = 0; i < 25; i++) {
             test();
+            moves += cube.moves;
+            cube.moves = 0;
         }
+        b.stop();
 
-        cube.display();
+        System.out.println("Bottom layer solve in average of " + (double) moves / 25 + " moves in " + (double) b.stop() / 25 + " microseconds");
+
+//        test();
+        //cube.display();
 
     }
 
@@ -29,7 +40,9 @@ public final class RubiksCube {
         for (int i = 0; i < 50; i++) {
             this.cube.rotate(CubeRotation.random());
         }
-        this.solver.solveRedCross();
+        this.solver.solveBottomCross();
+        this.solver.solveBottomLayer();
+        this.solver.firstTwoLayers();
     }
 
 }

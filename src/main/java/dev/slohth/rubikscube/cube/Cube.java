@@ -7,6 +7,8 @@ public class Cube {
 
     private final Cubit[] cubits;
 
+    public int moves;
+
     public Cube() {
         this.cubits = new Cubit[27];
         for (int i = 0; i < this.cubits.length; i++) this.cubits[i] = new Cubit(this, i);
@@ -18,6 +20,7 @@ public class Cube {
     }
 
     public void rotate(CubeRotation rotation) {
+        moves++;
         byte[] indexes = rotation.getFace().getCubits();
 
         Cubit[] temp = this.cubits.clone();

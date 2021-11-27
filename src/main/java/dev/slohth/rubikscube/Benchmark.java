@@ -6,33 +6,35 @@ import java.util.concurrent.TimeUnit;
 
 public final class Benchmark {
 
+    private final TimeUnit unit;
     private final ScheduledExecutorService service;
     private final Runnable runnable;
 
     private boolean running = false;
-    private int millis;
+    private int time;
 
-    public Benchmark() {
+    public Benchmark(TimeUnit unit) {
+        this.unit = unit;
         this.service = new ScheduledThreadPoolExecutor(6);
         this.runnable = () -> {
-            if (running) { this.millis++; this.scheduleNext(); }
+            if (running) { this.time++; this.scheduleNext(); }
         };
-        this.millis = 0;
+        this.time = 0;
     }
 
     public void start() {
-        this.millis = 0;
+        this.time = 0;
         this.running = true;
         this.scheduleNext();
     }
 
     public int stop() {
         this.running = false;
-        return millis;
+        return time;
     }
 
     private void scheduleNext() {
-        this.service.schedule(this.runnable, 1, TimeUnit.MILLISECONDS);
+        this.service.schedule(this.runnable, 1, unit);
     }
 
 }
