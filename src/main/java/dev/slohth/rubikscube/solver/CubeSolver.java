@@ -239,15 +239,6 @@ public class CubeSolver {
         }
     }
 
-    public void solveBottomLayer() {
-        do {
-            moveBottomLayerCornersToTopLayer();
-            moveTopLayerCornersToBottom();
-            moveTopCornersToTopLayer();
-            moveTopLayerCornersToBottom();
-        } while (!this.bottomLayerSolved());
-    }
-
     private void moveTopCornersToTopLayer() {
         while (this.getBottomCornersOnTop().size() > 0) {
 
@@ -308,6 +299,16 @@ public class CubeSolver {
         }
     }
 
+    public void solveBottomLayer() {
+        do {
+            moveBottomLayerCornersToTopLayer();
+            moveTopLayerCornersToBottom();
+            moveTopCornersToTopLayer();
+            moveTopLayerCornersToBottom();
+        } while (!this.bottomLayerSolved());
+        System.out.println("Not Stuck Here");
+    }
+
     private Set<Cubit> getBottomEdgesOnFace(CubeFace face) {
         Set<Cubit> edges = new HashSet<>();
         byte[] cubits = face.getCubits();
@@ -344,11 +345,133 @@ public class CubeSolver {
         for (int i = 0; i < 9; i++) {
             if (cube.getCubits()[CubeFace.DOWN.getCubits()[i]].getOrientation()[5] != 5) return false;
         }
+        for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK, CubeFace.LEFT }) {
+            for (int i = 6; i < 9; i++) {
+                if (cube.getCubits()[face.getCubits()[i]].getOrientation()[face.getId()] != face.getId()) return false;
+            }
+        }
         return true;
     }
 
     public void firstTwoLayers() {
 
+        this.orientTopLayerEdges();
+        this.orientMiddleLayerEdges();
+
+        if (!this.f2lSolved()) {
+            cube.display();
+        } else {
+            System.out.println(true);
+        }
+
+    }
+
+    private void orientTopLayerEdges() {
+        CubeFace[] faces = new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK };
+
+        while (this.getEdgesOnTopLayers().size() > 0) {
+            for (int i = 0; i < faces.length; i++) {
+                CubeFace face = faces[i];
+                Cubit cubit = cube.getCubits()[face.getCubits()[1]];
+                if (this.getEdgesOnTopLayers().contains(cubit)) {
+                    if (cubit.getOrientation()[face.getId()] == face.getId()) {
+                        boolean left = cubit.getOrientation()[0] == faces[i == 0 ? 3 : i - 1].getId();
+                        this.f2lAlgorithm(face, left);
+                        //System.out.println("Check 1: " + this.bottomLayerSolved());
+                    }
+                }
+            }
+
+            cube.rotate(CubeRotation.UP);
+
+        }
+        //System.out.println("Size: " + this.getEdgesOnTopLayers().size());
+
+    }
+
+    private void orientMiddleLayerEdges() {
+        CubeFace[] faces = new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK };
+
+        for (int i = 0; i < faces.length; i++) {
+            CubeFace face = faces[i];
+
+            Cubit leftEdge = cube.getCubits()[face.getCubits()[3]];
+            int leftId = faces[i == 0 ? 3 : i - 1].getId();
+            if (!(leftEdge.getOrientation()[leftId] == leftId && leftEdge.getOrientation()[faces[i].getId()] == faces[i].getId())) {
+                //System.out.println("Check 2: " + this.bottomLayerSolved());
+                this.f2lAlgorithm(face, true);
+                //System.out.println("Check 3: " + this.bottomLayerSolved());
+                this.orientTopLayerEdges();
+            }
+
+            Cubit rightEdge = cube.getCubits()[face.getCubits()[5]];
+            int rightId = faces[i == 3 ? 0 : i + 1].getId();
+            if (!(rightEdge.getOrientation()[rightId] == rightId && rightEdge.getOrientation()[faces[i].getId()] == faces[i].getId())) {
+                //System.out.println("Check 4: " + this.bottomLayerSolved());
+                this.f2lAlgorithm(face, false);
+                //System.out.println("Check 5: " + this.bottomLayerSolved());
+                this.orientTopLayerEdges();
+            }
+        }
+    }
+
+    private void f2lAlgorithm(CubeFace face, boolean left) {
+        CubeRotation fRot = CubeRotation.valueOf(face.toString());
+        CubeRotation fRotPrime = CubeRotation.valueOf(face.toString() + "_PRIME");
+
+        CubeRotation[] moves = new CubeRotation[2];
+        switch (face) {
+            case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, CubeRotation.LEFT, CubeRotation.RIGHT, CubeRotation.RIGHT_PRIME }; }
+            case RIGHT -> { moves = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.FRONT, CubeRotation.BACK, CubeRotation.BACK_PRIME }; }
+            case BACK -> { moves = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.RIGHT, CubeRotation.LEFT, CubeRotation.LEFT_PRIME }; }
+            case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, CubeRotation.BACK, CubeRotation.FRONT, CubeRotation.FRONT_PRIME }; }
+        }
+
+        if (left) {
+            cube.rotate(CubeRotation.UP_PRIME); cube.rotate(moves[0]);
+            cube.rotate(CubeRotation.UP); cube.rotate(moves[1]);
+            cube.rotate(CubeRotation.UP); cube.rotate(fRot);
+            cube.rotate(CubeRotation.UP_PRIME); cube.rotate(fRotPrime);
+        } else {
+            cube.rotate(CubeRotation.UP); cube.rotate(moves[2]);
+            cube.rotate(CubeRotation.UP_PRIME); cube.rotate(moves[3]);
+            cube.rotate(CubeRotation.UP_PRIME); cube.rotate(fRotPrime);
+            cube.rotate(CubeRotation.UP); cube.rotate(fRot);
+        }
+
+        System.out.println("Bottom layer: " + this.bottomLayerSolved());
+    }
+
+    private Set<Cubit> getEdgesOnTopLayers() {
+        Set<Cubit> edges = new HashSet<>();
+        for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK }) {
+            byte[] cubits = face.getCubits();
+            Cubit c = cube.getCubits()[cubits[1]];
+            if (c.getOrientation()[face.getId()] != 0 && c.getOrientation()[0] != 0) edges.add(c);
+        }
+        return edges;
+    }
+
+    private Set<Cubit> getEdgesOnMiddleLayers() {
+        Set<Cubit> edges = new HashSet<>();
+        for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK }) {
+            for (int i : new int[] { 3, 5 }) {
+                byte[] cubits = face.getCubits();
+                Cubit c = cube.getCubits()[cubits[i]];
+                if (c.getOrientation()[face.getId()] != face.getId()) edges.add(c);
+            }
+        }
+        return edges;
+    }
+
+    private boolean f2lSolved() {
+        if (!this.bottomLayerSolved()) return false;
+        for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK, CubeFace.LEFT }) {
+            for (int i = 3; i < 9; i++) {
+                if (cube.getCubits()[face.getCubits()[i]].getOrientation()[face.getId()] != face.getId()) return false;
+            }
+        }
+        return true;
     }
 
 }

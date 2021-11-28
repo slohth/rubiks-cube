@@ -19,19 +19,8 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
-        int moves = 0;
-        Benchmark b = new Benchmark(TimeUnit.MICROSECONDS);
-        b.start();
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 1000000; i++)
             test();
-            moves += cube.moves;
-            cube.moves = 0;
-        }
-        b.stop();
-
-        System.out.println("Bottom layer solve in average of " + (double) moves / 25 + " moves in " + (double) b.stop() / 25 + " microseconds");
-
-//        test();
         //cube.display();
 
     }
@@ -42,7 +31,7 @@ public final class RubiksCube {
         }
         this.solver.solveBottomCross();
         this.solver.solveBottomLayer();
-        this.solver.firstTwoLayers();
+        //this.solver.firstTwoLayers();
     }
 
 }
