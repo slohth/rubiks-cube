@@ -19,19 +19,24 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
-        for (int i = 0; i < 100; i++)
-            test();
-        //cube.display();
+        for (int i = 0; i < 1000000; i++)
+            if (!test()) {
+                System.out.println(false);
+                return;
+            } else {
+                System.out.println(true);
+            }
+        cube.display();
 
     }
 
-    private void test() {
+    private boolean test() {
         for (int i = 0; i < 50; i++) {
             this.cube.rotate(CubeRotation.random());
         }
         this.solver.solveBottomCross();
         this.solver.solveBottomLayer();
-        //this.solver.firstTwoLayers();
+        return this.solver.firstTwoLayers();
     }
 
 }
