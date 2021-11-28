@@ -5,6 +5,7 @@ import dev.slohth.rubikscube.cube.CubeFace;
 import dev.slohth.rubikscube.cube.CubeRotation;
 import dev.slohth.rubikscube.cubit.Cubit;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -362,12 +363,10 @@ public class CubeSolver {
         return true;
     }
 
-    public boolean firstTwoLayers() {
+    public void firstTwoLayers() {
 
         this.orientTopLayerEdges();
         this.orientMiddleLayerEdges();
-
-        return this.f2lSolved();
 
     }
 
@@ -449,26 +448,119 @@ public class CubeSolver {
         return edges;
     }
 
-    private Set<Cubit> getEdgesOnMiddleLayers() {
-        Set<Cubit> edges = new HashSet<>();
-        for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK }) {
-            for (int i : new int[] { 3, 5 }) {
-                byte[] cubits = face.getCubits();
-                Cubit c = cube.getCubits()[cubits[i]];
-                if (c.getOrientation()[face.getId()] != face.getId()) edges.add(c);
+    public void solveTopCross() {
+        while (!this.topCrossSolved()) {
+            boolean[] state = this.getCrossState();
+            if ((!state[0] && !state[1] && !state[2] && !state[3]) ||
+                    (!state[0] && state[1] && state[2] && !state[3]) ||
+                    (!state[0] && !state[1] && state[2] && state[3])) {
+                topCrossAlgorithm();
+            } else {
+                cube.rotate(CubeRotation.UP);
             }
         }
-        return edges;
     }
 
-    private boolean f2lSolved() {
-        if (!this.bottomLayerSolved()) return false;
-        for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK, CubeFace.LEFT }) {
-            for (int i = 3; i < 9; i++) {
-                if (cube.getCubits()[face.getCubits()[i]].getOrientation()[face.getId()] != face.getId()) return false;
+    private boolean[] getCrossState() {
+        boolean[] cross = new boolean[] { false, false, false, false };
+        int index = 0; byte[] cubits = CubeFace.UP.getCubits();
+        for (int i : new int[] { 1, 3, 5, 7 }) {
+            cross[index] = cube.getCubits()[cubits[i]].getOrientation()[0] == 0;
+            index++;
+        }
+        return cross;
+    }
+
+    private void topCrossAlgorithm() {
+        cube.rotate(CubeRotation.FRONT);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.FRONT_PRIME);
+    }
+
+    private boolean topCrossSolved() {
+        boolean[] state = this.getCrossState();
+        return (state[0] && state[1] && state[2] && state[3]);
+    }
+
+    public void solveTopCorners() {
+        while (!this.topCornersSolved()) {
+
+            boolean[] state = this.getCornersState();
+            if (this.getCornersSize(state) == 1) {
+                if (!state[0] && !state[1] && !state[2] && state[3]) {
+                    this.topCornersAlgorithm();
+                } else {
+                    cube.rotate(CubeRotation.UP);
+                }
+            } else {
+                if (this.getCornersSize(state) == 2) {
+                    if ((state[0] && !state[1] && state[2] && !state[3]) || (state[0] && !state[1] && !state[2] && state[3])) {
+                        this.topCornersAlgorithm();
+                    } else {
+                        cube.rotate(CubeRotation.UP);
+                    }
+                } else {
+                    boolean[] corners = new boolean[] { false, false };
+
+                    if (cube.getCubits()[CubeFace.FRONT.getCubits()[0]].getOrientation()[2] == 0) corners[0] = true;
+                    if (cube.getCubits()[CubeFace.FRONT.getCubits()[2]].getOrientation()[2] == 0) corners[1] = true;
+
+                    if (!corners[0] && !corners[1]) {
+                        cube.rotate(CubeRotation.UP);
+                    } else if (!corners[0]) {
+                        this.topCornersAlgorithm();
+                    } else if (!corners[1]) {
+                        cube.rotate(CubeRotation.LEFT);
+                        cube.rotate(CubeRotation.UP_PRIME);
+                        cube.rotate(CubeRotation.UP_PRIME);
+                        cube.rotate(CubeRotation.LEFT_PRIME);
+                        cube.rotate(CubeRotation.UP_PRIME);
+                        cube.rotate(CubeRotation.LEFT);
+                        cube.rotate(CubeRotation.UP_PRIME);
+                        cube.rotate(CubeRotation.LEFT_PRIME);
+                    } else {
+                        this.topCornersAlgorithm();
+                    }
+
+                }
+
             }
         }
-        return true;
+    }
+
+    private boolean[] getCornersState() {
+        boolean[] corners = new boolean[] { false, false, false, false };
+        int index = 0; byte[] cubits = CubeFace.UP.getCubits();
+        for (int i : new int[] { 0, 2, 6, 8 }) {
+            corners[index] = cube.getCubits()[cubits[i]].getOrientation()[0] == 0;
+            index++;
+        }
+        return corners;
+    }
+
+    private int getCornersSize(boolean[] state) {
+        int count = 0;
+        for (boolean b : state) if (b) count++;
+        return count;
+    }
+
+    private void topCornersAlgorithm() {
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.RIGHT);
+    }
+
+    private boolean topCornersSolved() {
+        boolean[] state = this.getCornersState();
+        return (state[0] && state[1] && state[2] && state[3]);
     }
 
 }

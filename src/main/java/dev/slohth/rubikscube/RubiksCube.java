@@ -4,8 +4,6 @@ import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
 import dev.slohth.rubikscube.solver.CubeSolver;
 
-import java.util.concurrent.TimeUnit;
-
 public final class RubiksCube {
 
     public static void main(String[] args) { new RubiksCube().run(); }
@@ -19,14 +17,19 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
-        for (int i = 0; i < 1000000; i++)
-            if (!test()) {
-                System.out.println(false);
-                return;
-            } else {
-                System.out.println(true);
-            }
-        cube.display();
+//        for (int i = 0; i < 1000000; i++)
+//            if (!test()) {
+//                System.out.println(false);
+//                return;
+//            } else {
+//                System.out.println(true);
+//            }
+
+        for (int i = 0; i < 1000000; i++) if (!test()) { cube.display(); return; }
+
+//
+//        test();
+//        cube.display();
 
     }
 
@@ -36,7 +39,11 @@ public final class RubiksCube {
         }
         this.solver.solveBottomCross();
         this.solver.solveBottomLayer();
-        return this.solver.firstTwoLayers();
+        this.solver.firstTwoLayers();
+        this.solver.solveTopCross();
+        this.solver.solveTopCorners();
+
+        return true;
     }
 
 }
