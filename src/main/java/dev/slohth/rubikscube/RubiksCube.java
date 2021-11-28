@@ -19,7 +19,7 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
-        for (int i = 0; i < 1000000; i++)
+        for (int i = 0; i < 100; i++)
             test();
         //cube.display();
 

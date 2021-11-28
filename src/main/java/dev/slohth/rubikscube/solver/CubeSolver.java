@@ -200,6 +200,28 @@ public class CubeSolver {
 
     }
 
+    private Set<Cubit> getBottomEdgesOnFace(CubeFace face) {
+        Set<Cubit> edges = new HashSet<>();
+        byte[] cubits = face.getCubits();
+        for (int index : new int[] { 1, 3, 5, 7 }) {
+            Cubit c = cube.getCubits()[cubits[index]];
+            if (c.getOrientation()[face.getId()] == 5) edges.add(c);
+        }
+        return edges;
+    }
+
+    public void solveBottomLayer() {
+        do {
+            moveBottomLayerCornersToTopLayer();
+            moveTopLayerCornersToBottom();
+            moveTopCornersToTopLayer();
+            moveTopLayerCornersToBottom();
+        } while (!this.bottomLayerSolved());
+        System.out.println("Not Stuck Here");
+        System.out.println("Bottom solved? " + this.bottomLayerSolved());
+        cube.display();
+    }
+
     private void moveTopLayerCornersToBottom() {
         while (this.getBottomCornersOnTopLayers().size() > 0) {
 
@@ -216,6 +238,8 @@ public class CubeSolver {
                 Cubit topLeft = cube.getCubits()[face.getCubits()[0]];
                 if (topLeft.getOrientation()[face.getId()] == 5) {
                     if (topLeft.getOrientation()[0] == face.getId()) {
+                        System.out.println("Moved top left corner to bottom");
+                        cube.display();
                         cube.rotate(CubeRotation.UP_PRIME);
                         cube.rotate(moves[0]);
                         cube.rotate(CubeRotation.UP);
@@ -226,6 +250,8 @@ public class CubeSolver {
                 Cubit topRight = cube.getCubits()[face.getCubits()[2]];
                 if (topRight.getOrientation()[face.getId()] == 5) {
                     if (topRight.getOrientation()[0] == face.getId()) {
+                        System.out.println("Moved top right corner to bottom");
+                        cube.display();
                         cube.rotate(CubeRotation.UP);
                         cube.rotate(moves[2]);
                         cube.rotate(CubeRotation.UP_PRIME);
@@ -256,6 +282,8 @@ public class CubeSolver {
                 Cubit bottomRight = cube.getCubits()[CubeFace.UP.getCubits()[bottom]];
                 if (bottomRight.getOrientation()[0] == 5) {
                     if (bottomRight.getOrientation()[face.getId()] == face.getId()) {
+                        System.out.println("Moved top corner to top layer");
+                        cube.display();
                         cube.rotate(CubeRotation.UP);
                         cube.rotate(moves[0]);
                         cube.rotate(CubeRotation.UP);
@@ -282,6 +310,8 @@ public class CubeSolver {
 
             Cubit bottomLeft = cube.getCubits()[face.getCubits()[6]];
             if (bottomLeft.getOrientation()[face.getId()] == 5) {
+                System.out.println("Moved bottom left corner to top layer");
+                cube.display();
                 cube.rotate(faceRot);
                 cube.rotate(CubeRotation.UP);
                 cube.rotate(CubeRotation.UP);
@@ -290,6 +320,8 @@ public class CubeSolver {
 
             Cubit bottomRight = cube.getCubits()[face.getCubits()[8]];
             if (bottomRight.getOrientation()[face.getId()] == 5) {
+                System.out.println("Moved bottom right corner to top layer");
+                cube.display();
                 cube.rotate(faceRotPrime);
                 cube.rotate(CubeRotation.UP);
                 cube.rotate(CubeRotation.UP);
@@ -297,26 +329,6 @@ public class CubeSolver {
             }
 
         }
-    }
-
-    public void solveBottomLayer() {
-        do {
-            moveBottomLayerCornersToTopLayer();
-            moveTopLayerCornersToBottom();
-            moveTopCornersToTopLayer();
-            moveTopLayerCornersToBottom();
-        } while (!this.bottomLayerSolved());
-        System.out.println("Not Stuck Here");
-    }
-
-    private Set<Cubit> getBottomEdgesOnFace(CubeFace face) {
-        Set<Cubit> edges = new HashSet<>();
-        byte[] cubits = face.getCubits();
-        for (int index : new int[] { 1, 3, 5, 7 }) {
-            Cubit c = cube.getCubits()[cubits[index]];
-            if (c.getOrientation()[face.getId()] == 5) edges.add(c);
-        }
-        return edges;
     }
 
     private Set<Cubit> getBottomCornersOnTopLayers() {
