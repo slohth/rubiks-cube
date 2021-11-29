@@ -4,6 +4,8 @@ import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
 import dev.slohth.rubikscube.solver.CubeSolver;
 
+import java.util.concurrent.TimeUnit;
+
 public final class RubiksCube {
 
     public static void main(String[] args) { new RubiksCube().run(); }
@@ -17,19 +19,25 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
-//        for (int i = 0; i < 1000000; i++)
-//            if (!test()) {
-//                System.out.println(false);
-//                return;
-//            } else {
-//                System.out.println(true);
-//            }
+        Benchmark benchmark = new Benchmark(TimeUnit.MICROSECONDS);
+        benchmark.start();
 
-        for (int i = 0; i < 1000000; i++) if (!test()) { cube.display(); return; }
+        int moves = 0;
+        for (int i = 0; i < 1000; i++) {
+            test();
+            moves += cube.getMoves();
+            cube.resetMoves();
+        }
+        System.out.println(moves);
 
-//
+        double averageTime = ((double) benchmark.stop()) / 1000;
+        double averageMoves = ((double) moves) / 1000;
+
+        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
+
 //        test();
 //        cube.display();
+//        System.out.println("Solved: " + cube.isSolved());
 
     }
 
@@ -42,8 +50,7 @@ public final class RubiksCube {
         this.solver.firstTwoLayers();
         this.solver.solveTopCross();
         this.solver.solveTopCorners();
-
-        return true;
+        return this.solver.orientLastLayer();
     }
 
 }

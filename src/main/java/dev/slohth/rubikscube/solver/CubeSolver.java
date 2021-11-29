@@ -5,9 +5,11 @@ import dev.slohth.rubikscube.cube.CubeFace;
 import dev.slohth.rubikscube.cube.CubeRotation;
 import dev.slohth.rubikscube.cubit.Cubit;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static dev.slohth.rubikscube.cube.CubeRotation.BACK;
+import static dev.slohth.rubikscube.cube.CubeRotation.LEFT;
 
 public class CubeSolver {
 
@@ -26,7 +28,7 @@ public class CubeSolver {
     private void moveDownEdgesToTop() {
         int[] data = new int[] { 1, 3, 5, 7 };
         int[] adj = new int[] { 7, 3, 5, 1 };
-        CubeRotation[] rots = new CubeRotation[] { CubeRotation.FRONT, CubeRotation.LEFT, CubeRotation.RIGHT, CubeRotation.BACK };
+        CubeRotation[] rots = new CubeRotation[] { CubeRotation.FRONT, LEFT, CubeRotation.RIGHT, BACK };
 
         for (Cubit edge : getBottomEdgesOnFace(CubeFace.DOWN)) {
             int pos = edge.getIndexInCube();
@@ -93,7 +95,7 @@ public class CubeSolver {
                             while (cube.getCubits()[1].getOrientation()[0] == 5) {
                                 cube.rotate(CubeRotation.UP);
                             }
-                            cube.rotate(CubeRotation.BACK);
+                            cube.rotate(BACK);
                         }
 
                         Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
@@ -125,18 +127,18 @@ public class CubeSolver {
                             while (cube.getCubits()[3].getOrientation()[0] == 5) {
                                 cube.rotate(CubeRotation.UP);
                             }
-                            cube.rotate(CubeRotation.LEFT);
+                            cube.rotate(LEFT);
                         }
 
                         Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
                         Cubit bottomCheck = cube.getCubits()[face.getCubits()[7]];
                         if (topCheck.getOrientation()[face.getId()] == 5) {
-                            cube.rotate(CubeRotation.BACK);
+                            cube.rotate(BACK);
                         } else if (bottomCheck.getOrientation()[face.getId()] == 5) {
                             while (cube.getCubits()[1].getOrientation()[0] == 5) {
                                 cube.rotate(CubeRotation.UP);
                             }
-                            cube.rotate(CubeRotation.BACK);
+                            cube.rotate(BACK);
                         }
                     }
 
@@ -163,12 +165,12 @@ public class CubeSolver {
                         Cubit topCheck = cube.getCubits()[face.getCubits()[1]];
                         Cubit bottomCheck = cube.getCubits()[face.getCubits()[7]];
                         if (topCheck.getOrientation()[face.getId()] == 5) {
-                            cube.rotate(CubeRotation.LEFT);
+                            cube.rotate(LEFT);
                         } else if (bottomCheck.getOrientation()[face.getId()] == 5) {
                             while (cube.getCubits()[3].getOrientation()[0] == 5) {
                                 cube.rotate(CubeRotation.UP);
                             }
-                            cube.rotate(CubeRotation.LEFT);
+                            cube.rotate(LEFT);
                         }
                     }
 
@@ -227,10 +229,10 @@ public class CubeSolver {
 
                 CubeRotation[] moves = new CubeRotation[4];
                 switch (face) {
-                    case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, CubeRotation.LEFT, CubeRotation.RIGHT, CubeRotation.RIGHT_PRIME }; }
-                    case RIGHT -> { moves = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.FRONT, CubeRotation.BACK, CubeRotation.BACK_PRIME }; }
-                    case BACK -> { moves = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.RIGHT, CubeRotation.LEFT, CubeRotation.LEFT_PRIME }; }
-                    case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, CubeRotation.BACK, CubeRotation.FRONT, CubeRotation.FRONT_PRIME }; }
+                    case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, LEFT, CubeRotation.RIGHT, CubeRotation.RIGHT_PRIME }; }
+                    case RIGHT -> { moves = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.FRONT, BACK, CubeRotation.BACK_PRIME }; }
+                    case BACK -> { moves = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.RIGHT, LEFT, CubeRotation.LEFT_PRIME }; }
+                    case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, BACK, CubeRotation.FRONT, CubeRotation.FRONT_PRIME }; }
                 }
 
                 Cubit topLeft = cube.getCubits()[face.getCubits()[0]];
@@ -271,10 +273,10 @@ public class CubeSolver {
                 CubeRotation[] moves = new CubeRotation[2];
                 int bottom = 0;
                 switch (face) {
-                    case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, CubeRotation.LEFT }; bottom = 8; }
+                    case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, LEFT }; bottom = 8; }
                     case RIGHT -> { moves = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.FRONT }; bottom = 2; }
                     case BACK -> { moves = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.RIGHT }; bottom = 0; }
-                    case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, CubeRotation.BACK }; bottom = 6; }
+                    case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, BACK }; bottom = 6; }
                 }
 
                 Cubit bottomRight = cube.getCubits()[CubeFace.UP.getCubits()[bottom]];
@@ -419,10 +421,10 @@ public class CubeSolver {
 
         CubeRotation[] moves = new CubeRotation[2];
         switch (face) {
-            case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, CubeRotation.LEFT, CubeRotation.RIGHT, CubeRotation.RIGHT_PRIME }; }
-            case RIGHT -> { moves = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.FRONT, CubeRotation.BACK, CubeRotation.BACK_PRIME }; }
-            case BACK -> { moves = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.RIGHT, CubeRotation.LEFT, CubeRotation.LEFT_PRIME }; }
-            case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, CubeRotation.BACK, CubeRotation.FRONT, CubeRotation.FRONT_PRIME }; }
+            case FRONT -> { moves = new CubeRotation[] { CubeRotation.LEFT_PRIME, LEFT, CubeRotation.RIGHT, CubeRotation.RIGHT_PRIME }; }
+            case RIGHT -> { moves = new CubeRotation[] { CubeRotation.FRONT_PRIME, CubeRotation.FRONT, BACK, CubeRotation.BACK_PRIME }; }
+            case BACK -> { moves = new CubeRotation[] { CubeRotation.RIGHT_PRIME, CubeRotation.RIGHT, LEFT, CubeRotation.LEFT_PRIME }; }
+            case LEFT -> { moves = new CubeRotation[] { CubeRotation.BACK_PRIME, BACK, CubeRotation.FRONT, CubeRotation.FRONT_PRIME }; }
         }
 
         if (left) {
@@ -513,12 +515,12 @@ public class CubeSolver {
                     } else if (!corners[0]) {
                         this.topCornersAlgorithm();
                     } else if (!corners[1]) {
-                        cube.rotate(CubeRotation.LEFT);
+                        cube.rotate(LEFT);
                         cube.rotate(CubeRotation.UP_PRIME);
                         cube.rotate(CubeRotation.UP_PRIME);
                         cube.rotate(CubeRotation.LEFT_PRIME);
                         cube.rotate(CubeRotation.UP_PRIME);
-                        cube.rotate(CubeRotation.LEFT);
+                        cube.rotate(LEFT);
                         cube.rotate(CubeRotation.UP_PRIME);
                         cube.rotate(CubeRotation.LEFT_PRIME);
                     } else {
@@ -561,6 +563,129 @@ public class CubeSolver {
     private boolean topCornersSolved() {
         boolean[] state = this.getCornersState();
         return (state[0] && state[1] && state[2] && state[3]);
+    }
+
+    public boolean orientLastLayer() {
+
+        this.solveToHeadlights();
+
+        do {
+            this.solveLastLayer();
+        } while (!cube.isSolved());
+
+        return true;
+    }
+
+    private void solveToHeadlights() {
+        while (!this.headlightsReady()) {
+            int h = this.getHeadlightFaceAmount();
+            if (h == 0) {
+                CubeFace face = null;
+                for (CubeFace f : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK}) {
+                    if (this.isSolved(f)) { face = f; break; }
+                }
+                if (face != null) this.moveFaceToBack(face);
+                this.headlightsAlgorithm();
+            } else if (h != 4) {
+                CubeFace face = null;
+                for (CubeFace f : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK}) {
+                    if (this.isHeadlights(f)) { face = f; break; }
+                }
+                this.moveFaceToBack(face);
+                this.headlightsAlgorithm();
+            }
+        }
+    }
+
+    private void headlightsAlgorithm() {
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.FRONT);
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.BACK);
+        cube.rotate(CubeRotation.BACK);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.FRONT_PRIME);
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.BACK);
+        cube.rotate(CubeRotation.BACK);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.RIGHT);
+    }
+
+    private void solveLastLayer() {
+        if (this.getHeadlightFaceAmount() == 4) { this.orientEdgesAlgorithm(); return; }
+
+        int solvedAmount = 0;
+        CubeFace face = null;
+        for (CubeFace f : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK}) {
+            if (this.isSolved(f)) { face = f; solvedAmount++; }
+        }
+
+        if (solvedAmount == 4) {
+            while (!cube.isSolved()) cube.rotate(CubeRotation.UP);
+        } else {
+            this.moveFaceToBack(face);
+            this.orientEdgesAlgorithm();
+        }
+    }
+
+    private void orientEdgesAlgorithm() {
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.UP);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.RIGHT_PRIME);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.RIGHT);
+        cube.rotate(CubeRotation.RIGHT);
+    }
+
+    private int getHeadlightFaceAmount() {
+        int headlights = 0;
+        for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK}) {
+            if (this.isHeadlights(face)) headlights++;
+        }
+        return headlights;
+    }
+
+    private int getSolvedFaceAmount() {
+        int solved = 0;
+        for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK}) {
+            if (this.isSolved(face)) solved++;
+        }
+        return solved;
+    }
+
+    private void moveFaceToBack(CubeFace face) {
+        int rots = 0;
+        switch (face) {
+            case LEFT -> { rots = 1; }
+            case FRONT -> { rots = 2; }
+            case RIGHT -> { rots = 3; }
+        }
+        for (int i = 0; i < rots; i++) cube.rotate(CubeRotation.UP);
+    }
+
+    private boolean headlightsReady() {
+        return this.getHeadlightFaceAmount() == 4 || (this.getHeadlightFaceAmount() == 3 && this.getSolvedFaceAmount() == 1);
+    }
+
+    private boolean isHeadlights(CubeFace face) {
+        Cubit c1 = cube.getCubits()[face.getCubits()[0]];
+        Cubit c2 = cube.getCubits()[face.getCubits()[2]];
+        Cubit c3 = cube.getCubits()[face.getCubits()[1]];
+        return (c1.getOrientation()[face.getId()] == c2.getOrientation()[face.getId()] && c1.getOrientation()[face.getId()] != c3.getOrientation()[face.getId()]);
+    }
+
+    private boolean isSolved(CubeFace face) {
+        Cubit c1 = cube.getCubits()[face.getCubits()[0]];
+        Cubit c2 = cube.getCubits()[face.getCubits()[2]];
+        Cubit c3 = cube.getCubits()[face.getCubits()[1]];
+        return (c1.getOrientation()[face.getId()] == c2.getOrientation()[face.getId()] && c1.getOrientation()[face.getId()] == c3.getOrientation()[face.getId()]);
     }
 
 }

@@ -7,7 +7,7 @@ public class Cube {
 
     private final Cubit[] cubits;
 
-    public int moves;
+    private int moves;
 
     public Cube() {
         this.cubits = new Cubit[27];
@@ -15,7 +15,11 @@ public class Cube {
     }
 
     public boolean isSolved() {
-        for (Cubit cubit : this.cubits) if (!cubit.isSolved()) return false;
+        for (CubeFace face : CubeFace.values()) {
+            for (int i = 0; i < 9; i++) {
+                if (this.getCubits()[face.getCubits()[i]].getOrientation()[face.getId()] != face.getId()) return false;
+            }
+        }
         return true;
     }
 
@@ -62,4 +66,7 @@ public class Cube {
     }
 
     public Cubit[] getCubits() { return this.cubits; }
+
+    public int getMoves() { return this.moves; }
+    public void resetMoves() { this.moves = 0; }
 }
