@@ -565,15 +565,11 @@ public class CubeSolver {
         return (state[0] && state[1] && state[2] && state[3]);
     }
 
-    public boolean orientLastLayer() {
-
+    public void orientLastLayer() {
         this.solveToHeadlights();
-
         do {
             this.solveLastLayer();
         } while (!cube.isSolved());
-
-        return true;
     }
 
     private void solveToHeadlights() {

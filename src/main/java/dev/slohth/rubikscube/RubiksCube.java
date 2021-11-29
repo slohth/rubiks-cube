@@ -41,7 +41,7 @@ public final class RubiksCube {
 
     }
 
-    private boolean test() {
+    private void test() {
         for (int i = 0; i < 50; i++) {
             this.cube.rotate(CubeRotation.random());
         }
@@ -50,7 +50,7 @@ public final class RubiksCube {
         this.solver.firstTwoLayers();
         this.solver.solveTopCross();
         this.solver.solveTopCorners();
-        return this.solver.orientLastLayer();
+        this.solver.orientLastLayer();
     }
 
 }
