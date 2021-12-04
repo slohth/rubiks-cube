@@ -34,6 +34,7 @@ public final class RubiksCube {
         double averageMoves = ((double) moves) / 1000;
 
         System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
+        cube.display();
 
 //        test();
 //        cube.display();

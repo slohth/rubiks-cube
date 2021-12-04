@@ -53,16 +53,52 @@ public class Cube {
             }
         }
 
-        System.out.println("      " + d[0] + " " + d[1] + " " + d[2]);
-        System.out.println("      " + d[3] + " " + d[4] + " " + d[5]);
-        System.out.println("      " + d[6] + " " + d[7] + " " + d[8]);
-        System.out.println(d[9] + " " + d[10] + " " + d[11] + " " + d[18] + " " + d[19] + " " + d[20] + " " + d[27] + " " + d[28] + " " + d[29] + " " + d[36] + " " + d[37] + " " + d[38]);
-        System.out.println(d[12] + " " + d[13] + " " + d[14] + " " + d[21] + " " + d[22] + " " + d[23] + " " + d[30] + " " + d[31] + " " + d[32] + " " + d[39] + " " + d[40] + " " + d[41]);
-        System.out.println(d[15] + " " + d[16] + " " + d[17] + " " + d[24] + " " + d[25] + " " + d[26] + " " + d[33] + " " + d[34] + " " + d[35] + " " + d[42] + " " + d[43] + " " + d[44]);
-        System.out.println("      " + d[45] + " " + d[46] + " " + d[47]);
-        System.out.println("      " + d[48] + " " + d[49] + " " + d[50]);
-        System.out.println("      " + d[51] + " " + d[52] + " " + d[53]);
+        System.out.println("      " + Colors.getColor(0) + " " + Colors.getColor(1) + " " + Colors.getColor(2));
+        System.out.println("      " + Colors.getColor(3) + " " + Colors.getColor(4) + " " + Colors.getColor(5));
+        System.out.println("      " + Colors.getColor(6) + " " + Colors.getColor(7) + " " + Colors.getColor(8));
+        System.out.println(Colors.getColor(9) + " " + Colors.getColor(10) + " " + Colors.getColor(11) + " "
+                + Colors.getColor(18) + " " + Colors.getColor(19) + " " + Colors.getColor(20) + " "
+                + Colors.getColor(27) + " " + Colors.getColor(28) + " " + Colors.getColor(29) + " "
+                + Colors.getColor(36) + " " + Colors.getColor(37) + " " + Colors.getColor(38));
+        System.out.println(Colors.getColor(12) + " " + Colors.getColor(13) + " " + Colors.getColor(14) + " "
+                + Colors.getColor(21) + " " + Colors.getColor(22) + " " + Colors.getColor(23) + " "
+                + Colors.getColor(30) + " " + Colors.getColor(31) + " " + Colors.getColor(32) + " "
+                + Colors.getColor(39) + " " + Colors.getColor(40) + " " + Colors.getColor(41));
+        System.out.println(Colors.getColor(15) + " " + Colors.getColor(16) + " " + Colors.getColor(17) + " "
+                + Colors.getColor(24) + " " + Colors.getColor(25) + " " + Colors.getColor(26) + " "
+                + Colors.getColor(33) + " " + Colors.getColor(34) + " " + Colors.getColor(35) + " "
+                + Colors.getColor(42) + " " + Colors.getColor(43) + " " + Colors.getColor(44));
+        System.out.println("      " + Colors.getColor(45) + " " + Colors.getColor(46) + " " + Colors.getColor(47));
+        System.out.println("      " + Colors.getColor(48) + " " + Colors.getColor(49) + " " + Colors.getColor(50));
+        System.out.println("      " + Colors.getColor(51) + " " + Colors.getColor(52) + " " + Colors.getColor(53));
 
+    }
+
+    private enum Colors {
+        RED("\033[0;31m", 0),
+        BLUE("\033[0;34m", 1),
+        GREEN("\033[0;32m", 2),
+        YELLOW("\033[0;33m", 3),
+        WHITE("\033[0;37m", 4),
+        PURPLE("\033[0;35m", 5);
+
+        Colors(String color, int i) {
+            COLOR = color;
+            NUM = i;
+        }
+
+        private String COLOR;
+        private int NUM;
+
+        private final String symbol = "■";
+
+        private static String getColor(int i) {
+            for (Colors value : values()) {
+                if (value.NUM == i/9)
+                    return value.COLOR + value.symbol;
+            }
+            return "F";
+        }
     }
 
     public Cubit[] getCubits() { return this.cubits; }
