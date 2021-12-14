@@ -1,13 +1,17 @@
 package dev.slohth.rubikscube.cube;
 
+import dev.slohth.rubikscube.cube.display.Color;
 import dev.slohth.rubikscube.cubit.Cubit;
 import dev.slohth.rubikscube.cubit.CubitRotation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cube {
 
     private final Cubit[] cubits;
-
     private int moves;
+    private List<CubeRotation> rotations = new ArrayList<>();
 
     public Cube() {
         this.cubits = new Cubit[27];
@@ -24,6 +28,7 @@ public class Cube {
     }
 
     public void rotate(CubeRotation rotation) {
+        rotations.add(rotation);
         moves++;
         byte[] indexes = rotation.getFace().getCubits();
 
@@ -53,20 +58,32 @@ public class Cube {
             }
         }
 
-        System.out.println("      " + d[0] + " " + d[1] + " " + d[2]);
-        System.out.println("      " + d[3] + " " + d[4] + " " + d[5]);
-        System.out.println("      " + d[6] + " " + d[7] + " " + d[8]);
-        System.out.println(d[9] + " " + d[10] + " " + d[11] + " " + d[18] + " " + d[19] + " " + d[20] + " " + d[27] + " " + d[28] + " " + d[29] + " " + d[36] + " " + d[37] + " " + d[38]);
-        System.out.println(d[12] + " " + d[13] + " " + d[14] + " " + d[21] + " " + d[22] + " " + d[23] + " " + d[30] + " " + d[31] + " " + d[32] + " " + d[39] + " " + d[40] + " " + d[41]);
-        System.out.println(d[15] + " " + d[16] + " " + d[17] + " " + d[24] + " " + d[25] + " " + d[26] + " " + d[33] + " " + d[34] + " " + d[35] + " " + d[42] + " " + d[43] + " " + d[44]);
-        System.out.println("      " + d[45] + " " + d[46] + " " + d[47]);
-        System.out.println("      " + d[48] + " " + d[49] + " " + d[50]);
-        System.out.println("      " + d[51] + " " + d[52] + " " + d[53]);
+        StringBuilder display = new StringBuilder();
 
+        display.append("      ").append(Color.getColor(d[0])).append(" ").append(Color.getColor(d[1])).append(" ").append(Color.getColor(d[2])).append("\n");
+        display.append("      ").append(Color.getColor(d[3])).append(" ").append(Color.getColor(d[4])).append(" ").append(Color.getColor(d[5])).append("\n");
+        display.append("      ").append(Color.getColor(d[6])).append(" ").append(Color.getColor(d[7])).append(" ").append(Color.getColor(d[8])).append("\n");
+        display.append(Color.getColor(d[9])).append(" ").append(Color.getColor(d[10])).append(" ").append(Color.getColor(d[11])).append(" ").append(Color.getColor(d[18])).append(" ").append(Color.getColor(d[19])).append(" ").append(Color.getColor(d[20])).append(" ").append(Color.getColor(d[27])).append(" ").append(Color.getColor(d[28])).append(" ").append(Color.getColor(d[29])).append(" ").append(Color.getColor(d[36])).append(" ").append(Color.getColor(d[37])).append(" ").append(Color.getColor(d[38])).append("\n");
+        display.append(Color.getColor(d[12])).append(" ").append(Color.getColor(d[13])).append(" ").append(Color.getColor(d[14])).append(" ").append(Color.getColor(d[21])).append(" ").append(Color.getColor(d[22])).append(" ").append(Color.getColor(d[23])).append(" ").append(Color.getColor(d[30])).append(" ").append(Color.getColor(d[31])).append(" ").append(Color.getColor(d[32])).append(" ").append(Color.getColor(d[39])).append(" ").append(Color.getColor(d[40])).append(" ").append(Color.getColor(d[41])).append("\n");
+        display.append(Color.getColor(d[15])).append(" ").append(Color.getColor(d[16])).append(" ").append(Color.getColor(d[17])).append(" ").append(Color.getColor(d[24])).append(" ").append(Color.getColor(d[25])).append(" ").append(Color.getColor(d[26])).append(" ").append(Color.getColor(d[33])).append(" ").append(Color.getColor(d[34])).append(" ").append(Color.getColor(d[35])).append(" ").append(Color.getColor(d[42])).append(" ").append(Color.getColor(d[43])).append(" ").append(Color.getColor(d[44])).append("\n");
+        display.append("      ").append(Color.getColor(d[45])).append(" ").append(Color.getColor(d[46])).append(" ").append(Color.getColor(d[47])).append("\n");
+        display.append("      ").append(Color.getColor(d[48])).append(" ").append(Color.getColor(d[49])).append(" ").append(Color.getColor(d[50])).append("\n");
+        display.append("      ").append(Color.getColor(d[51])).append(" ").append(Color.getColor(d[52])).append(" ").append(Color.getColor(d[53])).append("\n");
+
+        System.out.println(display.toString());
+    }
+
+    public void displayMoves() {
+        StringBuilder output = new StringBuilder();
+        for (CubeRotation rotation : this.rotations) {
+            String[] data = rotation.toString().split("_");
+            output.append(data[0].charAt(0)).append(data.length == 2 ? "'" : "").append("   ");
+        }
+        System.out.println(output.toString());
     }
 
     public Cubit[] getCubits() { return this.cubits; }
 
     public int getMoves() { return this.moves; }
-    public void resetMoves() { this.moves = 0; }
+    public void resetMoves() { this.moves = 0; this.rotations.clear(); }
 }

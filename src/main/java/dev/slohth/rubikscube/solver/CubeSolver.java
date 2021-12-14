@@ -11,6 +11,13 @@ import java.util.Set;
 import static dev.slohth.rubikscube.cube.CubeRotation.BACK;
 import static dev.slohth.rubikscube.cube.CubeRotation.LEFT;
 
+/**
+ * This class takes a Cube, and applies the steps of the beginner method to solve it:
+ * https://ruwix.com/the-rubiks-cube/how-to-solve-the-rubiks-cube-beginners-method/
+ *
+ * This solves the cube in an average of 200 moves in 17 microseconds
+ * @author Brandon
+ */
 public class CubeSolver {
 
     private final Cube cube;
@@ -25,6 +32,10 @@ public class CubeSolver {
         this.allignTopCrossToBottom();
     }
 
+    /**
+     * This procedure moves all the bottom face edges from the bottom face to the top face
+     * of the cube, for it to be aligned and inserted to the bottom layer
+     */
     private void moveDownEdgesToTop() {
         int[] data = new int[] { 1, 3, 5, 7 };
         int[] adj = new int[] { 7, 3, 5, 1 };
@@ -43,6 +54,10 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This procedure moves all the bottom face edges from a side face to the top face
+     * of the cube, for it to be aligned and inserted into the bottom layer
+     */
     private void moveFaceEdgesToTop() {
 
         for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK, CubeFace.LEFT}) {
@@ -180,6 +195,10 @@ public class CubeSolver {
 
     }
 
+    /**
+     * This procedure aligns and inserts the bottom face edges on the top face
+     * to the bottom face, therefore solving the cross
+     */
     private void allignTopCrossToBottom() {
 
         int[] edges = new int[] { 3, 7, 5, 1 };
@@ -203,6 +222,11 @@ public class CubeSolver {
 
     }
 
+    /**
+     * This function returns all the bottom face edges on the respective face
+     * @param face The face to check for bottom face edges
+     * @return The set of all cubits found to be a bottom edge
+     */
     private Set<Cubit> getBottomEdgesOnFace(CubeFace face) {
         Set<Cubit> edges = new HashSet<>();
         byte[] cubits = face.getCubits();
@@ -222,6 +246,10 @@ public class CubeSolver {
         } while (!this.bottomLayerSolved());
     }
 
+    /**
+     * This procedure moves all bottom face corners in the topmost layer of
+     * the cube to the bottom face in its correct position & orientation
+     */
     private void moveTopLayerCornersToBottom() {
         while (this.getBottomCornersOnTopLayers().size() > 0) {
 
@@ -265,6 +293,10 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This procedure moves all bottom face corners that are not in the topmost layer
+     * to the topmost layer, so they can be oriented to their correct position
+     */
     private void moveTopCornersToTopLayer() {
         while (this.getBottomCornersOnTop().size() > 0) {
 
@@ -302,6 +334,10 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This procedure moves all bottom face corners in the bottommost layer to the
+     * topmost layer, so it can be oriented to its correct position
+     */
     private void moveBottomLayerCornersToTopLayer() {
         for (CubeFace face : new CubeFace[] { CubeFace.FRONT, CubeFace.LEFT, CubeFace.BACK, CubeFace.RIGHT }) {
 
@@ -331,6 +367,10 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This function returns all the bottom face corners that are on the topmost layer
+     * @return A set of all the bottom face cubits
+     */
     private Set<Cubit> getBottomCornersOnTopLayers() {
         Set<Cubit> edges = new HashSet<>();
         for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK }) {
@@ -343,6 +383,10 @@ public class CubeSolver {
         return edges;
     }
 
+    /**
+     * This function returns all the bottom face corners that are on the top face
+     * @return A set of all the bottom face cubits
+     */
     private Set<Cubit> getBottomCornersOnTop() {
         Set<Cubit> edges = new HashSet<>();
         byte[] cubits = CubeFace.UP.getCubits();
@@ -353,6 +397,11 @@ public class CubeSolver {
         return edges;
     }
 
+    /**
+     * This function checks whether the bottom layer is solved, to terminate the
+     * while loop
+     * @return Whether the bottom layer is solved or not
+     */
     private boolean bottomLayerSolved() {
         for (int i = 0; i < 9; i++) {
             if (cube.getCubits()[CubeFace.DOWN.getCubits()[i]].getOrientation()[5] != 5) return false;
@@ -366,12 +415,14 @@ public class CubeSolver {
     }
 
     public void firstTwoLayers() {
-
         this.orientTopLayerEdges();
         this.orientMiddleLayerEdges();
-
     }
 
+    /**
+     * This procedure orients and inserts all the F2L edge pieces in the
+     * topmost layer, using the F2L algorithm
+     */
     private void orientTopLayerEdges() {
         CubeFace[] faces = new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK };
 
@@ -393,6 +444,10 @@ public class CubeSolver {
 
     }
 
+    /**
+     * This function validates the orientation of all the F2L edge pieces,
+     * and orients any that are in the incorrect position
+     */
     private void orientMiddleLayerEdges() {
         CubeFace[] faces = new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK };
 
@@ -415,6 +470,12 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This procedure applies the F2L algorithm to a given face, and whether it should
+     * orient the edge to the left or the right
+     * @param face The face to apply the algorithm
+     * @param left Whether this algorithm should orient to the left
+     */
     private void f2lAlgorithm(CubeFace face, boolean left) {
         CubeRotation fRot = CubeRotation.valueOf(face.toString());
         CubeRotation fRotPrime = CubeRotation.valueOf(face.toString() + "_PRIME");
@@ -440,6 +501,11 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This function returns all the F2L edge pieces that are in the topmost layer,
+     * ready to be orientated into their respective positions
+     * @return A set of all the F2L edge pieces
+     */
     private Set<Cubit> getEdgesOnTopLayers() {
         Set<Cubit> edges = new HashSet<>();
         for (CubeFace face : new CubeFace[] { CubeFace.LEFT, CubeFace.FRONT, CubeFace.RIGHT, CubeFace.BACK }) {
@@ -463,6 +529,10 @@ public class CubeSolver {
         }
     }
 
+    /**
+     * This function returns the current cross state on the top face, represented as booleans
+     * @return The cross state, "true" for a correctly oriented piece
+     */
     private boolean[] getCrossState() {
         boolean[] cross = new boolean[] { false, false, false, false };
         int index = 0; byte[] cubits = CubeFace.UP.getCubits();
@@ -473,6 +543,10 @@ public class CubeSolver {
         return cross;
     }
 
+    /**
+     * This procedure applies the algorithm for the top cross, relative to the
+     * front face of the cube
+     */
     private void topCrossAlgorithm() {
         cube.rotate(CubeRotation.FRONT);
         cube.rotate(CubeRotation.RIGHT);
@@ -482,6 +556,10 @@ public class CubeSolver {
         cube.rotate(CubeRotation.FRONT_PRIME);
     }
 
+    /**
+     * This function assesses whether the top cross is solved or not
+     * @return Whether the top cross is solved
+     */
     private boolean topCrossSolved() {
         boolean[] state = this.getCrossState();
         return (state[0] && state[1] && state[2] && state[3]);
@@ -489,7 +567,6 @@ public class CubeSolver {
 
     public void solveTopCorners() {
         while (!this.topCornersSolved()) {
-
             boolean[] state = this.getCornersState();
             if (this.getCornersSize(state) == 1) {
                 if (!state[0] && !state[1] && !state[2] && state[3]) {
@@ -526,13 +603,15 @@ public class CubeSolver {
                     } else {
                         this.topCornersAlgorithm();
                     }
-
                 }
-
             }
         }
     }
 
+    /**
+     * This function returns the current corners state on the top face, represented as booleans
+     * @return The corners state, "true" for a correctly oriented piece
+     */
     private boolean[] getCornersState() {
         boolean[] corners = new boolean[] { false, false, false, false };
         int index = 0; byte[] cubits = CubeFace.UP.getCubits();
@@ -543,12 +622,21 @@ public class CubeSolver {
         return corners;
     }
 
+    /**
+     * This function returns the number of corners that are correctly oriented on the top face
+     * @param state The state of the current corners
+     * @return The number of correctly oriented corners
+     */
     private int getCornersSize(boolean[] state) {
         int count = 0;
         for (boolean b : state) if (b) count++;
         return count;
     }
 
+    /**
+     * This procedure applies the top corners' algorithm relative to the front face
+     * of the cube
+     */
     private void topCornersAlgorithm() {
         cube.rotate(CubeRotation.RIGHT_PRIME);
         cube.rotate(CubeRotation.UP);
@@ -560,6 +648,10 @@ public class CubeSolver {
         cube.rotate(CubeRotation.RIGHT);
     }
 
+    /**
+     * This function assesses whether the top corners are solved
+     * @return Whether the top corners are solved or not
+     */
     private boolean topCornersSolved() {
         boolean[] state = this.getCornersState();
         return (state[0] && state[1] && state[2] && state[3]);

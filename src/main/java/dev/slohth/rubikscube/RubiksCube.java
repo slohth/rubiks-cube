@@ -19,25 +19,23 @@ public final class RubiksCube {
 
         this.solver = new CubeSolver(cube);
 
-        Benchmark benchmark = new Benchmark(TimeUnit.MICROSECONDS);
-        benchmark.start();
+//        Benchmark benchmark = new Benchmark(TimeUnit.MICROSECONDS);
+//        benchmark.start();
+//
+//        int moves = 0;
+//        for (int i = 0; i < 1000; i++) {
+//            test();
+//            moves += cube.getMoves();
+//            cube.resetMoves();
+//        }
+//
+//        double averageTime = ((double) benchmark.stop()) / 1000;
+//        double averageMoves = ((double) moves) / 1000;
+//
+//        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
 
-        int moves = 0;
-        for (int i = 0; i < 1000; i++) {
-            test();
-            moves += cube.getMoves();
-            cube.resetMoves();
-        }
-        System.out.println(moves);
-
-        double averageTime = ((double) benchmark.stop()) / 1000;
-        double averageMoves = ((double) moves) / 1000;
-
-        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
-
-//        test();
-//        cube.display();
-//        System.out.println("Solved: " + cube.isSolved());
+        test();
+        System.out.println(cube.getMoves());
 
     }
 
@@ -45,6 +43,8 @@ public final class RubiksCube {
         for (int i = 0; i < 50; i++) {
             this.cube.rotate(CubeRotation.random());
         }
+        cube.resetMoves();
+
         this.solver.solveBottomCross();
         this.solver.solveBottomLayer();
         this.solver.firstTwoLayers();
