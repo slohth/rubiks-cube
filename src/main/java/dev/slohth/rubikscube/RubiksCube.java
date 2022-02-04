@@ -2,6 +2,7 @@ package dev.slohth.rubikscube;
 
 import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
+import dev.slohth.rubikscube.display.Display;
 import dev.slohth.rubikscube.solver.CubeSolver;
 
 import java.util.concurrent.TimeUnit;
@@ -35,7 +36,8 @@ public final class RubiksCube {
 //        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
 
         test();
-        System.out.println(cube.getMoves());
+        //System.out.println(cube.getMoves());
+        new Display();
 
     }
 
