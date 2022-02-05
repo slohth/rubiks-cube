@@ -1,6 +1,7 @@
 package dev.slohth.rubikscube.display;
 
 import dev.slohth.rubikscube.cube.Cube;
+import dev.slohth.rubikscube.solver.CubeSolver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,8 +75,39 @@ public class Display implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(solve)) {
-            System.out.println(Arrays.toString(this.getInput()));
-            new Cube(this.getInput());
+            //System.out.println(Arrays.toString(this.getInput()));
+            Cube cube = new Cube(this.getInput());
+            CubeSolver solver = new CubeSolver(cube);
+
+            System.out.println("BOTTOM CROSS");
+            solver.solveBottomCross();
+            cube.displayMoves();
+            cube.resetMoves();
+
+            System.out.println("BOTTOM LAYER");
+            solver.solveBottomLayer();
+            cube.displayMoves();
+            cube.resetMoves();
+
+            System.out.println("F2L");
+            solver.firstTwoLayers();
+            cube.displayMoves();
+            cube.resetMoves();
+
+            System.out.println("TOP CROSS");
+            solver.solveTopCross();
+            cube.displayMoves();
+            cube.resetMoves();
+
+            System.out.println("TOP CORNERS");
+            solver.solveTopCorners();
+            cube.displayMoves();
+            cube.resetMoves();
+
+            System.out.println("OLL");
+            solver.orientLastLayer();
+            cube.displayMoves();
+            cube.resetMoves();
         }
     }
 

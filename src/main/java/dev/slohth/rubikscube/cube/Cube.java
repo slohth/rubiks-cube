@@ -21,6 +21,7 @@ public class Cube {
         this.cubits = new Cubit[27];
         for (int i = 0; i < this.cubits.length; i++) this.cubits[i] = new Cubit(this, i);
 
+        // STORE INPUTS INTO SPLIT ARRAYS PER FACE
         int[][] faces = new int[6][9];
 
         int face = 0;
@@ -29,7 +30,7 @@ public class Cube {
             faces[face][n - (face * 9)] = input[n];
         }
 
-
+        // STORE RELATIVE INPUT
         byte[][] cubitsToArrange = new byte[27][6];
 
         for (int cubit = 0; cubit < 27; cubit++) {
@@ -46,32 +47,13 @@ public class Cube {
             cubitsToArrange[cubit] = arr;
         }
 
-        //for (int[] c : cubitsToArrange) System.out.println(Arrays.toString(c));
-
-        //for (int i = 0; i < 27; i++) {
-        int i = 0;
-        Cubit cubit = cubits[i];
-
-//        System.out.println(Arrays.toString(cubit.getOrientation()));
-//        cubit.rotate(CubitRotation.RIGHT);
-//        System.out.println(Arrays.toString(cubit.getOrientation()));
-
-        byte[] arrange = cubitsToArrange[i];
-        System.out.println(Arrays.toString(arrange));
-        cubit.giveInput(arrange);
-
-//        List<byte[]> combinations = new ArrayList<>();
-//        long repeats = 0;
-//
-//        while (repeats < 100000000) {
-//            if (!add(combinations, cubit.getOrientation().clone())) {
-//                repeats++;
-//            }
-//            cubit.rotate(CubitRotation.random());
-//        }
-//        System.out.println(combinations.size() + "\n\n");
-//        for (byte[] arr : combinations) System.out.println(Arrays.toString(arr));
-
+        // APPLY INPUTS TO CUBIT
+        for (int i = 0; i < 27; i++) {
+            Cubit cubit = cubits[i];
+            byte[] arrange = cubitsToArrange[i];
+            //System.out.println(Arrays.toString(arrange));
+            cubit.giveInput(arrange);
+        }
     }
 
     private boolean add(List<byte[]> list, byte[] array) {
