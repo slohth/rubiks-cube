@@ -4,8 +4,7 @@ import dev.slohth.rubikscube.cube.display.Color;
 import dev.slohth.rubikscube.cubit.Cubit;
 import dev.slohth.rubikscube.cubit.CubitRotation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Cube {
 
@@ -16,6 +15,83 @@ public class Cube {
     public Cube() {
         this.cubits = new Cubit[27];
         for (int i = 0; i < this.cubits.length; i++) this.cubits[i] = new Cubit(this, i);
+    }
+
+    public Cube(int[] input) {
+        this.cubits = new Cubit[27];
+        for (int i = 0; i < this.cubits.length; i++) this.cubits[i] = new Cubit(this, i);
+
+        int[][] faces = new int[6][9];
+
+        int face = 0;
+        for (int n = 0; n < 54; n++) {
+            if (n != 0 && n % 9 == 0) face++;
+            faces[face][n - (face * 9)] = input[n];
+        }
+
+
+        byte[][] cubitsToArrange = new byte[27][6];
+
+        for (int cubit = 0; cubit < 27; cubit++) {
+            byte[] arr = new byte[] {-1, -1, -1, -1, -1, -1};
+
+            for (CubeFace cubeFace : CubeFace.values()) {
+                for (int index = 0; index < cubeFace.getCubits().length; index++) {
+                    if (cubeFace.getCubits()[index] == cubit) {
+                        arr[cubeFace.getId()] = (byte) faces[cubeFace.getId()][index];
+                    }
+                }
+            }
+
+            cubitsToArrange[cubit] = arr;
+        }
+
+        //for (int[] c : cubitsToArrange) System.out.println(Arrays.toString(c));
+
+        //for (int i = 0; i < 27; i++) {
+        int i = 0;
+        Cubit cubit = cubits[i];
+
+//        System.out.println(Arrays.toString(cubit.getOrientation()));
+//        cubit.rotate(CubitRotation.RIGHT);
+//        System.out.println(Arrays.toString(cubit.getOrientation()));
+
+        byte[] arrange = cubitsToArrange[i];
+        System.out.println(Arrays.toString(arrange));
+        cubit.giveInput(arrange);
+
+//        List<byte[]> combinations = new ArrayList<>();
+//        long repeats = 0;
+//
+//        while (repeats < 100000000) {
+//            if (!add(combinations, cubit.getOrientation().clone())) {
+//                repeats++;
+//            }
+//            cubit.rotate(CubitRotation.random());
+//        }
+//        System.out.println(combinations.size() + "\n\n");
+//        for (byte[] arr : combinations) System.out.println(Arrays.toString(arr));
+
+    }
+
+    private boolean add(List<byte[]> list, byte[] array) {
+        for (byte[] a : list) {
+            int check = 0;
+            for (int i = 0; i < a.length; i++) {
+                if (a[i] == array[i]) check++;
+            }
+            if (check == a.length) return false;
+        }
+        list.add(array.clone());
+        return true;
+    }
+
+    private boolean cubitIsInput(Cubit cubit, int[] arrange) {
+        for (int i = 0; i < 6; i++) {
+            if (arrange[i] == -1) continue;
+            if (cubit.getOrientation()[i] != arrange[i]) return false;
+        }
+        return true;
     }
 
     public boolean isSolved() {
@@ -75,10 +151,27 @@ public class Cube {
 
     public void displayMoves() {
         StringBuilder output = new StringBuilder();
-        for (CubeRotation rotation : this.rotations) {
-            String[] data = rotation.toString().split("_");
-            output.append(data[0].charAt(0)).append(data.length == 2 ? "'" : "").append("   ");
+
+        for (int i = 0; i < this.rotations.size(); i++) {
+            String[] data = rotations.get(i).toString().split("_");
+
+            int count = 1;
+            while (i < rotations.size() - 1 && rotations.get(i + 1) == rotations.get(i)) {
+                i++;
+                count++;
+            }
+            count = count % 4;
+
+            output.append(data[0].charAt(0));
+            if (count == 3) {
+                output.append(data.length != 2 ? "'" : "");
+            } else {
+                output.append(data.length == 2 ? "'" : "");
+            }
+            output.append(count > 1 && count != 3 ? count : "").append("   ");
+
         }
+
         System.out.println(output.toString());
     }
 

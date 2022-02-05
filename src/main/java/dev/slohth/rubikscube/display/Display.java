@@ -1,5 +1,7 @@
 package dev.slohth.rubikscube.display;
 
+import dev.slohth.rubikscube.cube.Cube;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -73,6 +75,7 @@ public class Display implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(solve)) {
             System.out.println(Arrays.toString(this.getInput()));
+            new Cube(this.getInput());
         }
     }
 

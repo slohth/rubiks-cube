@@ -2,9 +2,14 @@ package dev.slohth.rubikscube;
 
 import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
+import dev.slohth.rubikscube.cubit.Cubit;
+import dev.slohth.rubikscube.cubit.CubitRotation;
 import dev.slohth.rubikscube.display.Display;
 import dev.slohth.rubikscube.solver.CubeSolver;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public final class RubiksCube {
@@ -35,7 +40,7 @@ public final class RubiksCube {
 //
 //        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
 
-        test();
+        //test2();
         //System.out.println(cube.getMoves());
         new Display();
 
@@ -54,5 +59,12 @@ public final class RubiksCube {
         this.solver.solveTopCorners();
         this.solver.orientLastLayer();
     }
+
+    private void test2() {
+        Cubit cubit = new Cubit(cube, 0);
+
+    }
+
+
 
 }

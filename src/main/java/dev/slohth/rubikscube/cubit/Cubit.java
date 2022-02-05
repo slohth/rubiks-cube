@@ -2,7 +2,36 @@ package dev.slohth.rubikscube.cubit;
 
 import dev.slohth.rubikscube.cube.Cube;
 
+import java.util.Arrays;
+
 public class Cubit {
+
+    private static final byte[][] ORIENTATIONS = new byte[][] {
+            new byte[] {0, 1, 2, 3, 4, 5},
+            new byte[] {2, 1, 5, 3, 0, 4},
+            new byte[] {5, 1, 4, 3, 2, 0},
+            new byte[] {2, 0, 1, 5, 3, 4},
+            new byte[] {3, 0, 2, 5, 4, 1},
+            new byte[] {2, 3, 0, 1, 5, 4},
+            new byte[] {5, 3, 2, 1, 4, 0},
+            new byte[] {4, 3, 5, 1, 0, 2},
+            new byte[] {0, 3, 4, 1, 2, 5},
+            new byte[] {4, 5, 1, 0, 3, 2},
+            new byte[] {1, 5, 2, 0, 4, 3},
+            new byte[] {2, 5, 3, 0, 1, 4},
+            new byte[] {0, 2, 3, 4, 1, 5},
+            new byte[] {3, 2, 5, 4, 0, 1},
+            new byte[] {4, 1, 0, 3, 5, 2},
+            new byte[] {5, 4, 3, 2, 1, 0},
+            new byte[] {1, 4, 5, 2, 0, 3},
+            new byte[] {0, 4, 1, 2, 3, 5},
+            new byte[] {3, 4, 0, 2, 5, 1},
+            new byte[] {3, 5, 4, 0, 2, 1},
+            new byte[] {4, 0, 3, 5, 1, 2},
+            new byte[] {1, 0, 4, 5, 2, 3},
+            new byte[] {5, 2, 1, 4, 3, 0},
+            new byte[] {1, 2, 0, 4, 5, 3}
+    };
 
     private final int id;
     private final byte[] c;
@@ -11,6 +40,21 @@ public class Cubit {
     public Cubit(Cube cube, int id) {
         this.cube = cube; this.id = id;
         this.c = new byte[] { 0, 1, 2, 3, 4, 5 };
+    }
+
+    public void giveInput(byte[] input) {
+        for (byte[] arr : ORIENTATIONS) {
+
+            boolean match = true;
+            for (int i = 0; i < arr.length; i++) {
+                if (input[i] == -1) continue;
+                if (arr[i] != input[i]) {
+                    match = false; break;
+                }
+            }
+
+            if (match) System.out.println(Arrays.toString(arr));
+        }
     }
 
     public boolean isSolved() {
