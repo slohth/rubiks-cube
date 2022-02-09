@@ -2,14 +2,14 @@ package dev.slohth.rubikscube;
 
 import dev.slohth.rubikscube.cube.Cube;
 import dev.slohth.rubikscube.cube.CubeRotation;
+import dev.slohth.rubikscube.cube.move.Move;
+import dev.slohth.rubikscube.cube.move.MoveType;
 import dev.slohth.rubikscube.cubit.Cubit;
 import dev.slohth.rubikscube.cubit.CubitRotation;
 import dev.slohth.rubikscube.display.Display;
 import dev.slohth.rubikscube.solver.CubeSolver;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public final class RubiksCube {
@@ -40,10 +40,9 @@ public final class RubiksCube {
 //
 //        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
 
-        //test2();
+        test2();
         //System.out.println(cube.getMoves());
         new Display();
-
     }
 
     private void test() {
@@ -61,10 +60,92 @@ public final class RubiksCube {
     }
 
     private void test2() {
-        Cubit cubit = new Cubit(cube, 0);
+        List<Move> moves = new ArrayList<>();
 
+//        moves.add(new Move(MoveType.RIGHT, 2));
+//        moves.add(new Move(MoveType.FRONT, 2));
+//        moves.add(new Move(MoveType.UP, 2));
+//        moves.add(new Move(MoveType.FRONT, 2));
+//        moves.add(new Move(MoveType.BACK, 2));
+//        moves.add(new Move(MoveType.FRONT, -2));
+//        moves.add(new Move(MoveType.BACK, -2));
+//        moves.add(new Move(MoveType.UP, -2));
+//        moves.add(new Move(MoveType.FRONT, 2));
+//        moves.add(new Move(MoveType.RIGHT, 1));
+//        moves.add(new Move(MoveType.RIGHT, -3));
+
+//        moves.add(new Move(MoveType.FRONT, 2));
+//        moves.add(new Move(MoveType.BACK, 5));
+//        moves.add(new Move(MoveType.FRONT, -1));
+//        moves.add(new Move(MoveType.BACK, -1));
+//        moves.add(new Move(MoveType.FRONT, 3));
+//        moves.add(new Move(MoveType.RIGHT, 2));
+//        moves.add(new Move(MoveType.BACK, 2));
+//        moves.add(new Move(MoveType.RIGHT, 2));
+
+//        moves.add(new Move(MoveType.FRONT, -1));
+//        moves.add(new Move(MoveType.UP, 2));
+//        moves.add(new Move(MoveType.RIGHT, -1));
+//        moves.add(new Move(MoveType.LEFT, -1));
+//        moves.add(new Move(MoveType.RIGHT, 2));
+
+        List<Move> simplified = simplify(moves);
+        System.out.println(simplified.size());
+
+        for (Move move : simplified) System.out.println(move);
     }
 
+    private List<Move> simplify(List<Move> moves) {
+        boolean changed = false;
 
+        // REMOVING
+        List<Move> toRemove = new ArrayList<>();
+        for (Move move : moves) {
+            if (move.getCount() == 0) {
+                changed = true; toRemove.add(move);
+            }
+        }
+        moves.removeAll(toRemove);
+
+        // MERGING
+        List<Move> simplified = new ArrayList<>();
+        List<Move> toIgnore = new ArrayList<>();
+
+        for (int i = 0; i < moves.size(); i++) {
+//            if (i != moves.size() - 1 && moves.get(i).compare(moves.get(i + 1))) {
+//                changed = true;
+//                simplified.add(Move.add(moves.get(i), moves.get(i + 1)));
+//                i++;
+//            } else {
+//                simplified.add(moves.get(i));
+//            }
+            Move current = moves.get(i);
+            if (toIgnore.contains(current)) continue;
+
+            if (i == moves.size() - 1) {
+                simplified.add(current);
+            } else {
+                int n = i + 1;
+
+                while (n <= moves.size() - 2) {
+                    if (current.getType().isOpposite(moves.get(n).getType()) || toIgnore.contains(moves.get(n))) {
+                        n++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (current.compare(moves.get(n))) {
+                    changed = true;
+                    simplified.add(Move.add(current, moves.get(n)));
+                    toIgnore.add(moves.get(n));
+                } else {
+                    simplified.add(current);
+                }
+            }
+        }
+
+        return (changed ? simplify(simplified) : simplified);
+    }
 
 }

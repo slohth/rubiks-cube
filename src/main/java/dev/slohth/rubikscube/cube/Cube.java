@@ -143,6 +143,7 @@ public class Cube {
                 count++;
             }
             count = count % 4;
+            if (count == 0) continue;
 
             output.append(data[0].charAt(0));
             if (count == 3) {
