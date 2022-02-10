@@ -130,7 +130,7 @@ public class Cube {
         System.out.println(display.toString());
     }
 
-    public void displayMoves() {
+    public String getMovesDisplay() {
         StringBuilder output = new StringBuilder();
 
         for (Move move : simplify(moves)) {
@@ -140,7 +140,7 @@ public class Cube {
             output.append("   ");
         }
 
-        System.out.println(output.toString());
+        return output.toString();
     }
 
     public Cubit[] getCubits() { return this.cubits; }

@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.FutureTask;
 
 public class Display implements ActionListener {
 
@@ -23,7 +23,9 @@ public class Display implements ActionListener {
     private DisplayColor color = DisplayColor.BLANK;
 
     public Display() {
+        frame.setResizable(false);
         frame.setSize(665, 530);
+        panel.setSize(665, 530);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         frame.setTitle("Rubiks Cube Solver");
@@ -74,11 +76,11 @@ public class Display implements ActionListener {
 
     private void addPaintButtons(int x, int y) {
         panel.add(new PaintButton(this, DisplayColor.RED, x, y, 40, 40));
-        panel.add(new PaintButton(this, DisplayColor.BLUE, x + 50, y, 40, 40));
-        panel.add(new PaintButton(this, DisplayColor.WHITE, x + 100, y, 40, 40));
+        panel.add(new PaintButton(this, DisplayColor.ORANGE, x + 50, y, 40, 40));
+        panel.add(new PaintButton(this, DisplayColor.YELLOW, x + 100, y, 40, 40));
         panel.add(new PaintButton(this, DisplayColor.GREEN, x, y + 50, 40, 40));
-        panel.add(new PaintButton(this, DisplayColor.YELLOW, x + 50, y + 50, 40, 40));
-        panel.add(new PaintButton(this, DisplayColor.ORANGE, x + 100, y + 50, 40, 40));
+        panel.add(new PaintButton(this, DisplayColor.BLUE, x + 50, y + 50, 40, 40));
+        panel.add(new PaintButton(this, DisplayColor.WHITE, x + 100, y + 50, 40, 40));
     }
 
     public int[] getInput() {
@@ -91,38 +93,76 @@ public class Display implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(solve)) {
             //System.out.println(Arrays.toString(this.getInput()));
+            frame.setSize(1100, 530);
+
+            JPanel movesPanel = new JPanel();
+            movesPanel.setLayout(null);
+            movesPanel.setBackground(new Color(25, 25, 25));
+            movesPanel.setBounds(665, 0, 1100 - 665, 510);
+
+            JTextArea text = new JTextArea(10, 20);
+            text.setBounds(665, 0, 450, 490);
+            text.setLineWrap(true);
+            text.setWrapStyleWord(true);
+            text.setFont(new Font("SansSerif", Font.BOLD, 15));
+            text.setBackground(new Color(25, 25, 25));
+            text.setForeground(Color.white);
+
+
+            JScrollPane pane = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+            pane.setBounds(665, 0, 1100 - 665, 490);
+            text.setBorder(BorderFactory.createEmptyBorder());
+            pane.setBorder(BorderFactory.createEmptyBorder());
+
+            movesPanel.add(pane);
+
+            frame.add(movesPanel);
+            //frame.add(pane);
+            frame.setVisible(true);
+            solve.setText("Solved!");
+
             Cube cube = new Cube(this.getInput());
             CubeSolver solver = new CubeSolver(cube);
 
-            System.out.println("BOTTOM CROSS");
+            //System.out.println("BOTTOM CROSS");
             solver.solveBottomCross();
-            cube.displayMoves();
+            String bottomCross = cube.getMovesDisplay();
             cube.resetMoves();
 
-            System.out.println("BOTTOM LAYER");
+            //System.out.println("BOTTOM LAYER");
             solver.solveBottomLayer();
-            cube.displayMoves();
+            String bottomLayer = cube.getMovesDisplay();
             cube.resetMoves();
 
-            System.out.println("F2L");
+            //System.out.println("F2L");
             solver.firstTwoLayers();
-            cube.displayMoves();
+            String f2l = cube.getMovesDisplay();
             cube.resetMoves();
 
-            System.out.println("TOP CROSS");
+            //System.out.println("TOP CROSS");
             solver.solveTopCross();
-            cube.displayMoves();
+            String topCross = cube.getMovesDisplay();
             cube.resetMoves();
 
-            System.out.println("TOP CORNERS");
+            //System.out.println("TOP CORNERS");
             solver.solveTopCorners();
-            cube.displayMoves();
+            String topLayer = cube.getMovesDisplay();
             cube.resetMoves();
 
-            System.out.println("OLL");
+            //System.out.println("OLL");
             solver.orientLastLayer();
-            cube.displayMoves();
+            String oll = cube.getMovesDisplay();
             cube.resetMoves();
+
+            text.setText(
+                    "Bottom Cross\n\n" + bottomCross + "\n\n" +
+                    "Bottom Layer\n\n" + bottomLayer + "\n\n" +
+                    "F2L\n\n" + f2l + "\n\n" +
+                    "Top Cross\n\n" + topCross + "\n\n" +
+                    " Top Layer\n\n" + topLayer + "\n\n" +
+                    "OLL\n\n" + oll
+            );
         }
     }
 

@@ -61,18 +61,6 @@ public final class RubiksCube {
         this.solver.orientLastLayer();
     }
 
-    private void test2() {
-        cube.rotate(LEFT);
-        cube.rotate(CubeRotation.UP_PRIME);
-        cube.rotate(CubeRotation.UP_PRIME);
-        cube.rotate(CubeRotation.LEFT_PRIME);
-        cube.rotate(CubeRotation.UP_PRIME);
-        cube.rotate(LEFT);
-        cube.rotate(CubeRotation.UP_PRIME);
-        cube.rotate(CubeRotation.LEFT_PRIME);
-        cube.displayMoves();
-    }
-
     private List<Move> simplify(List<Move> moves) {
         boolean changed = false;
 

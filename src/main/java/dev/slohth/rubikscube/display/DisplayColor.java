@@ -5,11 +5,11 @@ import java.awt.*;
 public enum DisplayColor {
 
     RED(new Color(240, 53, 53), 0),
-    BLUE(new Color(53, 103, 240), 1),
+    BLUE(new Color(64, 110, 238), 1),
     WHITE(new Color(245, 245, 245), 2),
-    GREEN(new Color(53, 163, 31), 3),
+    GREEN(new Color(78, 193, 55), 3),
     YELLOW(new Color(252, 214, 43), 4),
-    ORANGE(new Color(255, 144, 25), 5),
+    ORANGE(new Color(250, 128, 52), 5),
     BLANK(new Color(70, 70, 70), -1);
 
     private final Color color;
