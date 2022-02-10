@@ -42,7 +42,7 @@ public final class RubiksCube {
 //
 //        System.out.println("Solved in " + averageMoves + " moves in " + averageTime + " microseconds");
 
-        test2();
+        //test2();
         //System.out.println(cube.getMoves());
         new Display();
     }

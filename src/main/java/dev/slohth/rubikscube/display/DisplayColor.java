@@ -9,7 +9,8 @@ public enum DisplayColor {
     WHITE(new Color(245, 245, 245), 2),
     GREEN(new Color(53, 163, 31), 3),
     YELLOW(new Color(252, 214, 43), 4),
-    ORANGE(new Color(255, 144, 25), 5);
+    ORANGE(new Color(255, 144, 25), 5),
+    BLANK(new Color(70, 70, 70), -1);
 
     private final Color color;
     private final int data;
@@ -24,15 +25,16 @@ public enum DisplayColor {
     }
     public int getData() { return this.data; }
 
-    public DisplayColor next() {
-        return switch (this) {
-            case RED -> BLUE;
-            case BLUE -> WHITE;
-            case WHITE -> GREEN;
-            case GREEN -> YELLOW;
-            case YELLOW -> ORANGE;
-            case ORANGE -> RED;
-        };
-    }
+//    public DisplayColor next() {
+//        return switch (this) {
+//            case RED -> BLUE;
+//            case BLUE -> WHITE;
+//            case WHITE -> GREEN;
+//            case GREEN -> YELLOW;
+//            case YELLOW -> ORANGE;
+//            case ORANGE -> RED;
+//        };
+//    }
 
 }
+

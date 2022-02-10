@@ -9,14 +9,15 @@ import java.awt.event.MouseEvent;
 
 public class CubitButton extends JButton implements ActionListener {
 
-    private DisplayColor color;
+    private final Display display;
+    private DisplayColor color = DisplayColor.BLANK;
 
-    public CubitButton(int x, int y, int width, int height, DisplayColor color) {
-        this.color = color;
+    public CubitButton(Display display, int x, int y, int width, int height) {
+        this.display = display;
 
         this.setBorder(BorderFactory.createEmptyBorder());
         this.setFocusPainted(false);
-        this.setBackground(color.getColor());
+        this.setBackground(display.getColor().getColor());
         this.setBounds(x, y, width, height);
         this.addActionListener(this);
 
@@ -39,16 +40,19 @@ public class CubitButton extends JButton implements ActionListener {
         });
     }
 
-    public void cycleColor() {
-        this.color = color.next();
-    }
     public DisplayColor getColor() { return this.color; }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(this)) {
-            this.cycleColor();
+            if (display.getColor() == this.color) {
+                this.color = DisplayColor.BLANK;
+            } else {
+                this.color = display.getColor();
+            }
             this.setBackground(color.getColor());
         }
     }
 }
+
+
