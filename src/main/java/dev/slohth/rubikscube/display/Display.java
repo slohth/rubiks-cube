@@ -92,7 +92,6 @@ public class Display implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(solve)) {
-            //System.out.println(Arrays.toString(this.getInput()));
             frame.setSize(1100, 530);
 
             JPanel movesPanel = new JPanel();
@@ -101,56 +100,48 @@ public class Display implements ActionListener {
             movesPanel.setBounds(665, 0, 1100 - 665, 510);
 
             JTextArea text = new JTextArea(10, 20);
+            JScrollPane pane = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
             text.setBounds(665, 0, 450, 490);
             text.setLineWrap(true);
             text.setWrapStyleWord(true);
             text.setFont(new Font("SansSerif", Font.BOLD, 15));
             text.setBackground(new Color(25, 25, 25));
             text.setForeground(Color.white);
+            text.setBorder(BorderFactory.createEmptyBorder());
 
-
-            JScrollPane pane = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
             pane.setBounds(665, 0, 1100 - 665, 490);
-            text.setBorder(BorderFactory.createEmptyBorder());
             pane.setBorder(BorderFactory.createEmptyBorder());
 
             movesPanel.add(pane);
-
             frame.add(movesPanel);
-            //frame.add(pane);
             frame.setVisible(true);
             solve.setText("Solved!");
 
             Cube cube = new Cube(this.getInput());
             CubeSolver solver = new CubeSolver(cube);
 
-            //System.out.println("BOTTOM CROSS");
             solver.solveBottomCross();
             String bottomCross = cube.getMovesDisplay();
             cube.resetMoves();
 
-            //System.out.println("BOTTOM LAYER");
             solver.solveBottomLayer();
             String bottomLayer = cube.getMovesDisplay();
             cube.resetMoves();
 
-            //System.out.println("F2L");
             solver.firstTwoLayers();
             String f2l = cube.getMovesDisplay();
             cube.resetMoves();
 
-            //System.out.println("TOP CROSS");
             solver.solveTopCross();
             String topCross = cube.getMovesDisplay();
             cube.resetMoves();
 
-            //System.out.println("TOP CORNERS");
             solver.solveTopCorners();
             String topLayer = cube.getMovesDisplay();
             cube.resetMoves();
 
-            //System.out.println("OLL");
             solver.orientLastLayer();
             String oll = cube.getMovesDisplay();
             cube.resetMoves();
