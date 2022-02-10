@@ -12,6 +12,8 @@ import dev.slohth.rubikscube.solver.CubeSolver;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static dev.slohth.rubikscube.cube.CubeRotation.LEFT;
+
 public final class RubiksCube {
 
     public static void main(String[] args) { new RubiksCube().run(); }
@@ -60,39 +62,15 @@ public final class RubiksCube {
     }
 
     private void test2() {
-        List<Move> moves = new ArrayList<>();
-
-//        moves.add(new Move(MoveType.RIGHT, 2));
-//        moves.add(new Move(MoveType.FRONT, 2));
-//        moves.add(new Move(MoveType.UP, 2));
-//        moves.add(new Move(MoveType.FRONT, 2));
-//        moves.add(new Move(MoveType.BACK, 2));
-//        moves.add(new Move(MoveType.FRONT, -2));
-//        moves.add(new Move(MoveType.BACK, -2));
-//        moves.add(new Move(MoveType.UP, -2));
-//        moves.add(new Move(MoveType.FRONT, 2));
-//        moves.add(new Move(MoveType.RIGHT, 1));
-//        moves.add(new Move(MoveType.RIGHT, -3));
-
-//        moves.add(new Move(MoveType.FRONT, 2));
-//        moves.add(new Move(MoveType.BACK, 5));
-//        moves.add(new Move(MoveType.FRONT, -1));
-//        moves.add(new Move(MoveType.BACK, -1));
-//        moves.add(new Move(MoveType.FRONT, 3));
-//        moves.add(new Move(MoveType.RIGHT, 2));
-//        moves.add(new Move(MoveType.BACK, 2));
-//        moves.add(new Move(MoveType.RIGHT, 2));
-
-//        moves.add(new Move(MoveType.FRONT, -1));
-//        moves.add(new Move(MoveType.UP, 2));
-//        moves.add(new Move(MoveType.RIGHT, -1));
-//        moves.add(new Move(MoveType.LEFT, -1));
-//        moves.add(new Move(MoveType.RIGHT, 2));
-
-        List<Move> simplified = simplify(moves);
-        System.out.println(simplified.size());
-
-        for (Move move : simplified) System.out.println(move);
+        cube.rotate(LEFT);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.LEFT_PRIME);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(LEFT);
+        cube.rotate(CubeRotation.UP_PRIME);
+        cube.rotate(CubeRotation.LEFT_PRIME);
+        cube.displayMoves();
     }
 
     private List<Move> simplify(List<Move> moves) {

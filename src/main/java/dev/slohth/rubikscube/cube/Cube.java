@@ -1,6 +1,7 @@
 package dev.slohth.rubikscube.cube;
 
 import dev.slohth.rubikscube.cube.display.Color;
+import dev.slohth.rubikscube.cube.move.Move;
 import dev.slohth.rubikscube.cubit.Cubit;
 import dev.slohth.rubikscube.cubit.CubitRotation;
 
@@ -9,8 +10,7 @@ import java.util.*;
 public class Cube {
 
     private final Cubit[] cubits;
-    private int moves;
-    private List<CubeRotation> rotations = new ArrayList<>();
+    private List<Move> moves = new ArrayList<>();
 
     public Cube() {
         this.cubits = new Cubit[27];
@@ -86,8 +86,7 @@ public class Cube {
     }
 
     public void rotate(CubeRotation rotation) {
-        rotations.add(rotation);
-        moves++;
+        moves.add(new Move(rotation));
         byte[] indexes = rotation.getFace().getCubits();
 
         Cubit[] temp = this.cubits.clone();
@@ -134,25 +133,11 @@ public class Cube {
     public void displayMoves() {
         StringBuilder output = new StringBuilder();
 
-        for (int i = 0; i < this.rotations.size(); i++) {
-            String[] data = rotations.get(i).toString().split("_");
-
-            int count = 1;
-            while (i < rotations.size() - 1 && rotations.get(i + 1) == rotations.get(i)) {
-                i++;
-                count++;
-            }
-            count = count % 4;
-            if (count == 0) continue;
-
-            output.append(data[0].charAt(0));
-            if (count == 3) {
-                output.append(data.length != 2 ? "'" : "");
-            } else {
-                output.append(data.length == 2 ? "'" : "");
-            }
-            output.append(count > 1 && count != 3 ? count : "").append("   ");
-
+        for (Move move : simplify(moves)) {
+            output.append(move.getType().toString().charAt(0));
+            if (move.getCount() < 0 && move.getCount() != -3) output.append("'");
+            if (move.getCount() != 1 && move.getCount() != -1) output.append(Math.abs(move.getCount()));
+            output.append("   ");
         }
 
         System.out.println(output.toString());
@@ -160,6 +145,52 @@ public class Cube {
 
     public Cubit[] getCubits() { return this.cubits; }
 
-    public int getMoves() { return this.moves; }
-    public void resetMoves() { this.moves = 0; this.rotations.clear(); }
+    public int getMoves() { return this.moves.size(); }
+    public void resetMoves() { this.moves.clear(); }
+
+    private List<Move> simplify(List<Move> moves) {
+        boolean changed = false;
+
+        // REMOVING
+        List<Move> toRemove = new ArrayList<>();
+        for (Move move : moves) {
+            if (move.getCount() == 0) {
+                changed = true; toRemove.add(move);
+            }
+        }
+        moves.removeAll(toRemove);
+
+        // MERGING
+        List<Move> simplified = new ArrayList<>();
+        List<Move> toIgnore = new ArrayList<>();
+
+        for (int i = 0; i < moves.size(); i++) {
+            Move current = moves.get(i);
+            if (toIgnore.contains(current)) continue;
+
+            if (i == moves.size() - 1) {
+                simplified.add(current);
+            } else {
+                int n = i + 1;
+
+                while (n <= moves.size() - 2) {
+                    if (current.getType().isOpposite(moves.get(n).getType()) || toIgnore.contains(moves.get(n))) {
+                        n++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (current.compare(moves.get(n))) {
+                    changed = true;
+                    simplified.add(Move.add(current, moves.get(n)));
+                    toIgnore.add(moves.get(n));
+                } else {
+                    simplified.add(current);
+                }
+            }
+        }
+
+        return (changed ? simplify(simplified) : simplified);
+    }
 }
