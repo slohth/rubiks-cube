@@ -1,6 +1,5 @@
 package dev.slohth.rubikscube.cube;
 
-import dev.slohth.rubikscube.cube.display.Color;
 import dev.slohth.rubikscube.cube.move.Move;
 import dev.slohth.rubikscube.cubit.Cubit;
 import dev.slohth.rubikscube.cubit.CubitRotation;
@@ -56,26 +55,6 @@ public class Cube {
         }
     }
 
-    private boolean add(List<byte[]> list, byte[] array) {
-        for (byte[] a : list) {
-            int check = 0;
-            for (int i = 0; i < a.length; i++) {
-                if (a[i] == array[i]) check++;
-            }
-            if (check == a.length) return false;
-        }
-        list.add(array.clone());
-        return true;
-    }
-
-    private boolean cubitIsInput(Cubit cubit, int[] arrange) {
-        for (int i = 0; i < 6; i++) {
-            if (arrange[i] == -1) continue;
-            if (cubit.getOrientation()[i] != arrange[i]) return false;
-        }
-        return true;
-    }
-
     public boolean isSolved() {
         for (CubeFace face : CubeFace.values()) {
             for (int i = 0; i < 9; i++) {
@@ -105,31 +84,6 @@ public class Cube {
         return new byte[] { arr[6], arr[3], arr[0], arr[7], arr[4], arr[1], arr[8], arr[5], arr[2] };
     }
 
-    public void display() {
-        int count = 0;
-        byte[] d = new byte[54];
-        for (CubeFace face : CubeFace.values()) {
-            for (byte index : face.getCubits()) {
-                d[count] = this.cubits[index].getOrientation()[face.getId()];
-                count++;
-            }
-        }
-
-        StringBuilder display = new StringBuilder();
-
-        display.append("      ").append(Color.getColor(d[0])).append(" ").append(Color.getColor(d[1])).append(" ").append(Color.getColor(d[2])).append("\n");
-        display.append("      ").append(Color.getColor(d[3])).append(" ").append(Color.getColor(d[4])).append(" ").append(Color.getColor(d[5])).append("\n");
-        display.append("      ").append(Color.getColor(d[6])).append(" ").append(Color.getColor(d[7])).append(" ").append(Color.getColor(d[8])).append("\n");
-        display.append(Color.getColor(d[9])).append(" ").append(Color.getColor(d[10])).append(" ").append(Color.getColor(d[11])).append(" ").append(Color.getColor(d[18])).append(" ").append(Color.getColor(d[19])).append(" ").append(Color.getColor(d[20])).append(" ").append(Color.getColor(d[27])).append(" ").append(Color.getColor(d[28])).append(" ").append(Color.getColor(d[29])).append(" ").append(Color.getColor(d[36])).append(" ").append(Color.getColor(d[37])).append(" ").append(Color.getColor(d[38])).append("\n");
-        display.append(Color.getColor(d[12])).append(" ").append(Color.getColor(d[13])).append(" ").append(Color.getColor(d[14])).append(" ").append(Color.getColor(d[21])).append(" ").append(Color.getColor(d[22])).append(" ").append(Color.getColor(d[23])).append(" ").append(Color.getColor(d[30])).append(" ").append(Color.getColor(d[31])).append(" ").append(Color.getColor(d[32])).append(" ").append(Color.getColor(d[39])).append(" ").append(Color.getColor(d[40])).append(" ").append(Color.getColor(d[41])).append("\n");
-        display.append(Color.getColor(d[15])).append(" ").append(Color.getColor(d[16])).append(" ").append(Color.getColor(d[17])).append(" ").append(Color.getColor(d[24])).append(" ").append(Color.getColor(d[25])).append(" ").append(Color.getColor(d[26])).append(" ").append(Color.getColor(d[33])).append(" ").append(Color.getColor(d[34])).append(" ").append(Color.getColor(d[35])).append(" ").append(Color.getColor(d[42])).append(" ").append(Color.getColor(d[43])).append(" ").append(Color.getColor(d[44])).append("\n");
-        display.append("      ").append(Color.getColor(d[45])).append(" ").append(Color.getColor(d[46])).append(" ").append(Color.getColor(d[47])).append("\n");
-        display.append("      ").append(Color.getColor(d[48])).append(" ").append(Color.getColor(d[49])).append(" ").append(Color.getColor(d[50])).append("\n");
-        display.append("      ").append(Color.getColor(d[51])).append(" ").append(Color.getColor(d[52])).append(" ").append(Color.getColor(d[53])).append("\n");
-
-        System.out.println(display.toString());
-    }
-
     public String getMovesDisplay() {
         StringBuilder output = new StringBuilder();
 
@@ -145,7 +99,6 @@ public class Cube {
 
     public Cubit[] getCubits() { return this.cubits; }
 
-    public int getMoves() { return this.moves.size(); }
     public void resetMoves() { this.moves.clear(); }
 
     private List<Move> simplify(List<Move> moves) {

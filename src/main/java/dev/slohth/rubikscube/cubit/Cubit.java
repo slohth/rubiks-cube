@@ -56,11 +56,6 @@ public class Cubit {
         }
     }
 
-    public boolean isSolved() {
-        for (byte i = 0; i < this.orientation.length; i++) if (this.orientation[i] != i) return false;
-        return true;
-    }
-
     public void rotate(CubitRotation rotation) {
         byte[] v = new byte[] { orientation[0], orientation[2], orientation[5], orientation[4] };
         byte[] h = new byte[] { orientation[1], orientation[2], orientation[3], orientation[4] };
